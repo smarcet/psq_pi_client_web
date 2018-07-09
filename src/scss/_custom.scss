@@ -1,0 +1,163 @@
+// Here you can add other styles
+
+.add-entity-button{
+  margin-bottom: 10px;
+}
+
+.video-thumbnail{
+  height: 100%;
+  width: 100%;
+  border: solid 1px gainsboro;
+  margin-right: 10px;
+
+}
+.header-dropdown-user-info{
+  font-size: 14px;
+}
+
+@include media-breakpoint-down(md){
+  .header-dropdown-user-info{
+    display: none;
+  }
+}
+
+.available-slots-container{
+  margin-bottom: 10px;
+}
+
+.filter-search{
+  position: relative;
+  z-index: 1;
+  left: 0.5em !important;
+  top: -28px !important;
+  color: #7B7B7B;
+  cursor:pointer;
+  width: 0;
+}
+
+.input-search{
+  padding-left: 1.5em;
+}
+
+.button-add{
+  width: 100% !important;
+  margin-bottom: 10px;
+}
+
+.col-button{
+  width: 5%;
+}
+
+.dropdown-add {
+  width: 100% !important;
+  .btn {
+    width: 100% !important;
+  }
+  padding-bottom: 10px;
+}
+
+.search-container{
+  padding-bottom: 10px;
+}
+
+.user-pic
+{
+  height: 50px;
+  width: 50px;
+  border: 1px solid black;
+}
+
+.invalid-checkbox-list{
+  border: 1px solid red;
+  .invalid-tooltip{
+    display: block;
+  }
+  .invalid-feedback{
+    display: block;
+  }
+}
+
+
+.sidebar-fixed .main, .sidebar-fixed .app-footer {
+  margin-left: 0px !important;
+}
+
+.main .container-fluid {
+  padding-top: 25px;
+}
+
+.img-wrapper {
+  position: relative;
+}
+
+.img-overlay1 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.img-overlay1:before {
+  content: ' ';
+  display: block;
+  /* adjust 'height' to position overlay content vertically */
+  height: 50%;
+}
+
+.img-overlay2 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.img-overlay2:before {
+  content: ' ';
+  display: block;
+  /* adjust 'height' to position overlay content vertically */
+}
+
+.exercise-timer{
+  font-weight: bold;
+  font-size: 20pt;
+  margin-left: 20px;
+  color: gainsboro;
+}
+
+.img-overlay3 {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.img-overlay3:before {
+  content: ' ';
+  display: block;
+  /* adjust 'height' to position overlay content vertically */
+  height: 20%;
+}
+
+.exercise-timer-ready{
+  font-weight: bold;
+  font-size: 90pt;
+  color: gainsboro;
+}
+
+.btn-player {border-radius: 50%;}
+
+.btn-right{
+  float: right;
+  margin: 10px;
+}
+
+.exercise-option{
+  background-color: white;
+  border-color: white;
+}
