@@ -6,6 +6,7 @@ export const RETRIEVED_AVAILABLE_EXERCISES = 'RETRIEVED_AVAILABLE_EXERCISES';
 export const RETRIEVED_EXERCISE = 'RETRIEVED_EXERCISE';
 export const EXERCISE_STARTED = 'EXERCISE_STARTED';
 export const EXERCISE_SUBMITTED = 'EXERCISE_SUBMITTED';
+
 export const getAvailableExercises = (currentPage = 1, pageSize = DEFAULT_PAGE_SIZE, searchTerm = '', ordering = 'id') => (dispatch, getState) => {
     let { loggedUserState } = getState();
     let { token, currentDevice }           = loggedUserState;
@@ -63,7 +64,7 @@ export const startExerciseRecordingJob = (exercise) => (dispatch, getState) => {
         token : token,
     };
 
-    postRequest(
+    return postRequest(
         createAction(START_LOADING),
         createAction(EXERCISE_STARTED),
         `${apiBaseUrl}/devices/${currentDevice.id}/users/${currentUser.id}/exercises/${exercise.id}/record-jobs`,
@@ -87,7 +88,7 @@ export const stopExerciseRecordingJob = (exercise, job) => (dispatch, getState) 
         token : token,
     };
 
-    putRequest(
+    return putRequest(
         createAction(START_LOADING),
         createAction(EXERCISE_SUBMITTED),
         `${apiBaseUrl}/devices/${currentDevice.id}/users/${currentUser.id}/exercises/${exercise.id}/record-jobs/${job.id}`,

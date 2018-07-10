@@ -62,14 +62,15 @@ class ExercisePlayer extends Component {
     renderTimerReady(){
         let {readySeconds} = this.state;
         if(readySeconds == 0)
-            return T.translate("GO!!!");
+            return T.translate("GO!!");
         return readySeconds;
     }
 
     startExercise(){
-       let readyInterval =  window.setInterval(this.runReadyTimer, 1000);
-       this.setState({...this.state, exerciseStatus: EXERCISE_STARTING_STATUS, readyInterval, readySeconds: 5});
-       this.props.startExerciseRecordingJob(this.props.currentExercise);
+       this.props.startExerciseRecordingJob(this.props.currentExercise).then(() => {
+           let readyInterval =  window.setInterval(this.runReadyTimer, 1000);
+           this.setState({...this.state, exerciseStatus: EXERCISE_STARTING_STATUS, readyInterval, readySeconds: 5});
+       });
     }
 
     stopExercise(){
@@ -86,8 +87,16 @@ class ExercisePlayer extends Component {
 
                 let {interval} = this.state;
                 window.clearInterval(interval);
-                this.props.stopExerciseRecordingJob(this.props.currentExercise, this.props.currentRecordingJob);
-                this.setState({...this.state, exerciseStatus: EXERCISE_INITIAL_STATUS, seconds:0, interval: null});
+                this.props.stopExerciseRecordingJob(this.props.currentExercise, this.props.currentRecordingJob).then(() => {
+                    swal({
+                        title: T.translate('Success!!!'),
+                        text: T.translate('Your exam was successfully submitted'),
+                        type: 'success'
+                    });
+                    this.setState({...this.state, exerciseStatus: EXERCISE_INITIAL_STATUS, seconds:0, interval: null});
+                    this.props.history.push("/auth/exercises");
+                });
+
             }
         })
     }
