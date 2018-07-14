@@ -14,7 +14,7 @@ class MainLayout extends Component {
         let { currentUser } = this.props;
         return (
             <div className="app">
-                <AjaxLoader show={this.props.loading}/>
+                <AjaxLoader show={this.props.loading} size={150} color="white"/>
                 <Header currentUser={currentUser}/>
                 <div className="app-body">
                     <main className="main">
