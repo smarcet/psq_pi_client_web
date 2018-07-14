@@ -3,7 +3,6 @@ import { LOGOUT_USER } from '../actions/auth-actions';
 
 const DEFAULT_STATE = {
     loading: false,
-
 }
 
 const baseReducer = (state = DEFAULT_STATE, action) => {

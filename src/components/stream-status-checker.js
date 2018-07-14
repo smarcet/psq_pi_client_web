@@ -32,7 +32,7 @@ export class StreamStatusChecker extends Component
         let {streamUrl} = this.props
         let img = document.getElementById("stream-status-checker-img");
         let now = new Date();
-        img.src = `${streamUrl}?t=${now.getTime()}`;
+        img.src = `${streamUrl}?_=${now.getTime()}`;
     }
 
     onStreamLoad(event){

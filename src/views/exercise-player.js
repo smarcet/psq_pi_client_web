@@ -42,9 +42,10 @@ class ExercisePlayer extends Component {
         console.log(`onStreamStateChange streamStatus ${streamStatus}`);
         let streamUrl  = process.env['LOCAL_STREAM_URL'];
         let player = document.getElementById("stream_player")
+        let now = new Date();
         if(streamStatus == STREAM_STATUS_OK){
             // load the stream on player
-           player.src = streamUrl;
+           player.src = `${streamUrl}?_=${now.getTime()}`;
         }
         if(streamStatus == STREAM_STATUS_ERROR){
             player.src = "/img/stream_error.jpg"
