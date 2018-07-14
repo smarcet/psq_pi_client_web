@@ -7,7 +7,7 @@ class AuthorizedRoute extends React.Component {
     }
 
     render() {
-        const { component: Component, isLoggedUser, currentUser, ...rest } = this.props;
+        const { component: Component, isLoggedUser, currentUser, loading, ...rest } = this.props;
         return (
             <Route {...rest} render={ props => {
 
@@ -21,7 +21,7 @@ class AuthorizedRoute extends React.Component {
                 }
 
                 return isLoggedUser
-                    ? <Component {...props} currentUser={currentUser}/>
+                    ? <Component {...props} currentUser={currentUser} loading={loading}/>
                     : <Redirect
                         to={{
                             pathname: `/?BackUrl=${encodeURIComponent(backUrl)}`,

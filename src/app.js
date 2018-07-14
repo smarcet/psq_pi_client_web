@@ -8,17 +8,16 @@ import { onUserAuth, doLogin, doVerification } from './actions/auth-actions'
 import Page404 from './views/Page404';
 import Page500 from "./views/Page500";
 import MainLayout from "./views/main-layout";
-import {AjaxLoader} from "./components/ajax-loader";
 
 class App extends React.PureComponent {
     render() {
         return (
             <BrowserRouter>
-                    <AjaxLoader show={this.props.loading}/>
                     <Switch>
                         <AuthorizedRoute isLoggedUser={this.props.isLoggedUser}
                                          path='/auth'
                                          currentUser={this.props.currentUser}
+                                         loading={this.props.loading}
                                          component={MainLayout} />
                         <Route path="/404" component={Page404} />
                         <Route path="/500" component={Page500} />

@@ -7,13 +7,14 @@ import ExercisePlayer from './exercise-player';
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Breadcrumb from '../components/Breadcrumb';
+import {AjaxLoader} from "../components/ajax-loader";
 
 class MainLayout extends Component {
     render() {
         let { currentUser } = this.props;
-        console.log(this.props.match.params);
         return (
             <div className="app">
+                <AjaxLoader show={this.props.loading}/>
                 <Header currentUser={currentUser}/>
                 <div className="app-body">
                     <main className="main">
