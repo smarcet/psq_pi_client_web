@@ -35,7 +35,6 @@ class ExercisePlayer extends Component {
         this.stopExercise = this.stopExercise.bind(this);
         this.renderTimerReady = this.renderTimerReady.bind(this);
         this.runReadyTimer = this.runReadyTimer.bind(this);
-        this.onStreamStateChange = this.onStreamStateChange.bind(this);
     }
 
     componentWillMount () {
