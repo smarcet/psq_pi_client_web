@@ -40,7 +40,7 @@ export const getExerciseById = (exerciseId) => (dispatch, getState) => {
         token : token,
     };
 
-    getRequest(
+    return getRequest(
         createAction(START_LOADING),
         createAction(RETRIEVED_EXERCISE),
         `${apiBaseUrl}/exercises/${exerciseId}`,
