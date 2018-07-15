@@ -28,7 +28,7 @@ class ExercisePlayer extends Component {
             interval: 0,
             readySeconds : 5,
             readyInterval: 0,
-            streamStatus: null
+            streamStatus: STREAM_STATUS_OK
         }
         this.runTimer = this.runTimer.bind(this);
         this.startExercise = this.startExercise.bind(this);
@@ -36,6 +36,7 @@ class ExercisePlayer extends Component {
         this.renderTimerReady = this.renderTimerReady.bind(this);
         this.runReadyTimer = this.runReadyTimer.bind(this);
         this.onStreamLoadError = this.onStreamLoadError.bind(this);
+        this.onStreamLoad = this.onStreamLoad.bind(this);
     }
 
     onStreamLoadError(){
@@ -43,6 +44,10 @@ class ExercisePlayer extends Component {
         let player = document.getElementById("stream_player")
         player.src = "/img/stream_error.jpg"
         this.setState({...this.state, streamStatus: STREAM_STATUS_ERROR});
+    }
+
+    onStreamLoad(){
+
     }
 
     componentWillMount () {
@@ -54,7 +59,6 @@ class ExercisePlayer extends Component {
             let player = document.getElementById("stream_player")
             let now = new Date();
             player.src = `${streamUrl}?_=${now.getTime()}`;
-            //this.setState({...this.state, STREAM_STATUS_OK});
         });
     }
 
@@ -152,6 +156,7 @@ class ExercisePlayer extends Component {
                                          id="stream_player"
                                          name="stream_player"
                                          onError={this.onStreamLoadError}
+                                         onLoad={this.onStreamLoad}
                                     />
                                     {streamStatus == STREAM_STATUS_OK && exerciseStatus == EXERCISE_INITIAL_STATUS &&
                                     <div className="img-overlay1">
