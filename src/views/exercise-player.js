@@ -38,26 +38,17 @@ class ExercisePlayer extends Component {
         this.onStreamStateChange = this.onStreamStateChange.bind(this);
     }
 
-    onStreamStateChange(streamStatus) {
-        console.log(`onStreamStateChange streamStatus ${streamStatus}`);
-        let streamUrl  = process.env['LOCAL_STREAM_URL'];
-        let player = document.getElementById("stream_player")
-        let now = new Date();
-        if(streamStatus == STREAM_STATUS_OK){
-            // load the stream on player
-           player.src = `${streamUrl}?_=${now.getTime()}`;
-        }
-        if(streamStatus == STREAM_STATUS_ERROR){
-            player.src = "/img/stream_error.jpg"
-        }
-        this.setState({...this.state, streamStatus});
-    }
-
     componentWillMount () {
         let  exerciseId = this.props.match.params.exercise_id;
         // get exercise ...
         console.log(`getting exercise ${exerciseId} ...`);
-        this.props.getExerciseById(exerciseId);
+        this.props.getExerciseById(exerciseId).then(() => {
+            let streamUrl  = process.env['LOCAL_STREAM_URL'];
+            let player = document.getElementById("stream_player")
+            let now = new Date();
+            player.src = `${streamUrl}?_=${now.getTime()}`;
+            this.setState({...this.state, STREAM_STATUS_OK});
+        });
     }
 
     renderTimerReady(){
@@ -149,10 +140,6 @@ class ExercisePlayer extends Component {
                                 <Row>
                                     <Col xs="12" lg="12">
                                 <div className="img-wrapper">
-                                    <StreamStatusChecker
-                                        onStreamStateChange={this.onStreamStateChange}
-                                        streamUrl={streamUrl}
-                                    />
                                     <img className="rounded img-fluid mx-auto d-block"
                                          src="/img/video_thumbnail_generic.png"
                                          id="stream_player"

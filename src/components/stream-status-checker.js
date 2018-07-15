@@ -16,7 +16,8 @@ export class StreamStatusChecker extends Component
     }
 
     componentDidMount(){
-        this.setStatusChecker();
+        //this.setStatusChecker();
+        this.props.onStreamStateChange(STREAM_STATUS_OK);
     }
 
     componentWillUnmount(){
