@@ -108,11 +108,11 @@
 
 .img-overlay2 {
   position: absolute;
-  top: 0;
+  top: 1%;
   bottom: 0;
-  left: 0;
+  left: 3%;
   right: 0;
-  text-align: center;
+  text-align: left;
 }
 
 .img-overlay2:before {
@@ -126,6 +126,7 @@
   font-size: 20pt;
   margin-left: 20px;
   color: gainsboro;
+  vertical-align: middle;
 }
 
 .img-overlay3 {
@@ -150,7 +151,10 @@
   color: gainsboro;
 }
 
-.btn-player {border-radius: 50%;}
+.btn-player {
+  border-radius: 50%;
+  font-size: xx-large;
+}
 
 .btn-right{
   float: right;
@@ -160,4 +164,36 @@
 .exercise-option{
   background-color: white;
   border-color: white;
+}
+
+.btn-recording{
+  -webkit-animation: glowing 1500ms infinite;
+  -moz-animation: glowing 1500ms infinite;
+  -o-animation: glowing 1500ms infinite;
+  animation: glowing 1500ms infinite;
+  font-size: x-large !important;
+}
+
+@-webkit-keyframes glowing {
+  0% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+  50% { background-color: #FF0000; -webkit-box-shadow: 0 0 40px #FF0000; }
+  100% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+}
+
+@-moz-keyframes glowing {
+  0% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+  50% { background-color: #FF0000; -moz-box-shadow: 0 0 40px #FF0000; }
+  100% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+}
+
+@-o-keyframes glowing {
+  0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+  50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+  100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+}
+
+@keyframes glowing {
+  0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+  50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+  100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
 }

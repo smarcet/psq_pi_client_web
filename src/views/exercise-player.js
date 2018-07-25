@@ -9,9 +9,9 @@ import {
 import swal from "sweetalert2";
 import T from 'i18n-react';
 import 'sweetalert2/dist/sweetalert2.css';
-import { connect } from 'react-redux'
-import { StreamStatusChecker, STREAM_STATUS_OK, STREAM_STATUS_ERROR}  from '../components/stream-status-checker';
-import { getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob } from '../actions/exercises-actions';
+import {connect} from 'react-redux'
+import {StreamStatusChecker, STREAM_STATUS_OK, STREAM_STATUS_ERROR} from '../components/stream-status-checker';
+import {getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob} from '../actions/exercises-actions';
 
 const EXERCISE_INITIAL_STATUS = 0;
 const EXERCISE_STARTING_STATUS = 1;
@@ -19,14 +19,14 @@ const EXERCISE_RUNNING_STATUS = 2;
 
 class ExercisePlayer extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.startExercise = this.startExercise.bind(this);
         this.state = {
-            exerciseStatus : EXERCISE_INITIAL_STATUS,
-            seconds:0,
+            exerciseStatus: EXERCISE_INITIAL_STATUS,
+            seconds: 0,
             interval: 0,
-            readySeconds : 5,
+            readySeconds: 5,
             readyInterval: 0,
             streamStatus: STREAM_STATUS_OK
         }
@@ -39,44 +39,44 @@ class ExercisePlayer extends Component {
         this.onStreamLoad = this.onStreamLoad.bind(this);
     }
 
-    onStreamLoadError(){
+    onStreamLoadError() {
         console.log('onStreamLoadError');
         let player = document.getElementById("stream_player")
         player.src = "/img/stream_error.jpg"
         this.setState({...this.state, streamStatus: STREAM_STATUS_ERROR});
     }
 
-    onStreamLoad(){
+    onStreamLoad() {
 
     }
 
-    componentWillMount () {
-        let  exerciseId = this.props.match.params.exercise_id;
+    componentWillMount() {
+        let exerciseId = this.props.match.params.exercise_id;
         // get exercise ...
         console.log(`getting exercise ${exerciseId} ...`);
         this.props.getExerciseById(exerciseId).then(() => {
-            let streamUrl  = process.env['LOCAL_STREAM_URL'];
+            let streamUrl = process.env['LOCAL_STREAM_URL'];
             let player = document.getElementById("stream_player")
             let now = new Date();
             player.src = `${streamUrl}?_=${now.getTime()}`;
         });
     }
 
-    renderTimerReady(){
+    renderTimerReady() {
         let {readySeconds} = this.state;
-        if(readySeconds == 0)
+        if (readySeconds == 0)
             return T.translate("GO!!");
         return readySeconds;
     }
 
-    startExercise(){
-       this.props.startExerciseRecordingJob(this.props.currentExercise).then(() => {
-           let readyInterval =  window.setInterval(this.runReadyTimer, 1000);
-           this.setState({...this.state, exerciseStatus: EXERCISE_STARTING_STATUS, readyInterval, readySeconds: 5});
-       });
+    startExercise() {
+        this.props.startExerciseRecordingJob(this.props.currentExercise).then(() => {
+            let readyInterval = window.setInterval(this.runReadyTimer, 1000);
+            this.setState({...this.state, exerciseStatus: EXERCISE_STARTING_STATUS, readyInterval, readySeconds: 5});
+        });
     }
 
-    stopExercise(){
+    stopExercise() {
         swal({
             title: T.translate('Are you sure?'),
             text: T.translate('You will submit the exercise'),
@@ -96,7 +96,7 @@ class ExercisePlayer extends Component {
                         text: T.translate('Your exam was successfully submitted'),
                         type: 'success'
                     });
-                    this.setState({...this.state, exerciseStatus: EXERCISE_INITIAL_STATUS, seconds:0, interval: null});
+                    this.setState({...this.state, exerciseStatus: EXERCISE_INITIAL_STATUS, seconds: 0, interval: null});
                     this.props.history.push("/auth/exercises");
                 });
 
@@ -104,89 +104,87 @@ class ExercisePlayer extends Component {
         })
     }
 
-    runTimer(){
-        this.setState({...this.state, seconds : this.state.seconds + 1});
+    runTimer() {
+        this.setState({...this.state, seconds: this.state.seconds + 1});
     }
 
-    runReadyTimer(){
+    runReadyTimer() {
         let {readySeconds, readyInterval, interval, seconds, exerciseStatus} = this.state;
         readySeconds = readySeconds - 1;
-        if(readySeconds < 0){
+        if (readySeconds < 0) {
             window.clearInterval(readyInterval);
             readyInterval = 0;
-            interval =  window.setInterval(this.runTimer, 1000);
+            interval = window.setInterval(this.runTimer, 1000);
             seconds = 0;
             exerciseStatus = EXERCISE_RUNNING_STATUS;
         }
         this.setState({...this.state, readySeconds, readyInterval, interval, seconds, exerciseStatus});
     }
 
-    renderTimer(){
+    renderTimer() {
         let {seconds} = this.state;
         let leftSeconds = seconds % 60;
-        let minutes = Math.floor(seconds / 60 );
-        if(leftSeconds < 10){
+        let minutes = Math.floor(seconds / 60);
+        if (leftSeconds < 10) {
             leftSeconds = `0${leftSeconds}`;
         }
-        if(minutes < 10){
+        if (minutes < 10) {
             minutes = `0${minutes}`;
         }
         return `${minutes}:${leftSeconds}`;
     }
 
-    render(){
-        let streamUrl  = process.env['LOCAL_STREAM_URL'];
+    render() {
+        let streamUrl = process.env['LOCAL_STREAM_URL'];
         let {exerciseStatus, streamStatus} = this.state;
-        let { currentExercise } = this.props;
-        if(currentExercise == null) return null;
-        return(
+        let {currentExercise} = this.props;
+        if (currentExercise == null) return null;
+        return (
             <div className="animated fadeIn">
                 <Row>
                     <Col xs="12" lg="12">
                         <Card>
                             <CardHeader>
-                                <i className="fa fa-align-justify"></i> {T.translate("Exercise {exercise_name}", {exercise_name : currentExercise.title})}
+                                <i className="fa fa-align-justify"></i> {T.translate("Exercise {exercise_name}", {exercise_name: currentExercise.title})}
                             </CardHeader>
                             <CardBody>
                                 <Row>
                                     <Col xs="12" lg="12">
-                                <div className="img-wrapper">
-                                    <img className="rounded img-fluid mx-auto d-block"
-                                         src="/img/video_thumbnail_generic.png"
-                                         id="stream_player"
-                                         name="stream_player"
-                                         onError={this.onStreamLoadError}
-                                         onLoad={this.onStreamLoad}
-                                    />
-                                    {streamStatus == STREAM_STATUS_OK && exerciseStatus == EXERCISE_INITIAL_STATUS &&
-                                    <div className="img-overlay1">
-                                        <button className="btn btn-md btn-success btn-player" onClick={this.startExercise}>
-                                            <i className="fa fa-play-circle"></i>
-                                        </button>
-                                    </div>
-                                    }
-                                    {exerciseStatus == EXERCISE_STARTING_STATUS  &&
-                                    <div className="img-overlay3">
-                                        <span className="exercise-timer-ready" id="timer-ready" name="timer-ready">{this.renderTimerReady()}</span>
-                                    </div>
-                                    }
-                                    {exerciseStatus == EXERCISE_RUNNING_STATUS  &&
-                                    <div className="img-overlay2">
-                                        <span className="exercise-timer" id="timer" name="timer">{this.renderTimer()}</span>
-                                    </div>
-                                    }
-                                </div>
+                                        <div className="img-wrapper">
+                                            <img className="rounded img-fluid mx-auto d-block"
+                                                 src="/img/video_thumbnail_generic.png"
+                                                 id="stream_player"
+                                                 name="stream_player"
+                                                 onError={this.onStreamLoadError}
+                                                 onLoad={this.onStreamLoad}
+                                            />
+                                            {streamStatus == STREAM_STATUS_OK && exerciseStatus == EXERCISE_INITIAL_STATUS &&
+                                            <div className="img-overlay1">
+                                                <button className="btn btn-lg btn-success btn-player"
+                                                        onClick={this.startExercise}>
+                                                    <i className="fa fa-play-circle"></i>
+                                                </button>
+                                            </div>
+                                            }
+                                            {exerciseStatus == EXERCISE_STARTING_STATUS &&
+                                            <div className="img-overlay3">
+                                                <span className="exercise-timer-ready" id="timer-ready"
+                                                      name="timer-ready">{this.renderTimerReady()}</span>
+                                            </div>
+                                            }
+                                            {exerciseStatus == EXERCISE_RUNNING_STATUS &&
+                                            <div className="img-overlay2">
+                                                <button className="btn btn-md btn-danger btn-player btn-recording"
+                                                        onClick={this.stopExercise}>
+                                                    <i className="fa fa-stop-circle"></i>
+                                                </button>
+                                                <span className="exercise-timer" id="timer"
+                                                      name="timer">{this.renderTimer()}</span>
+                                            </div>
+                                            }
+                                        </div>
                                     </Col>
                                 </Row>
-                                {exerciseStatus == EXERCISE_RUNNING_STATUS  &&
-                                <Row>
-                                    <Col xs="12" lg="12" className="text-center">
-                                        <button className="btn btn-md btn-danger btn-player" onClick={this.stopExercise}>
-                                            <i className="fa fa-stop-circle"></i>
-                                        </button>
-                                    </Col>
-                                </Row>
-                                }
                             </CardBody>
                         </Card>
                     </Col>
@@ -196,12 +194,12 @@ class ExercisePlayer extends Component {
     }
 }
 
-const mapStateToProps = ({ exerciseStateState }) => ({
+const mapStateToProps = ({exerciseStateState}) => ({
     currentExercise: exerciseStateState.currentExercise,
     currentRecordingJob: exerciseStateState.currentRecordingJob
 });
 
-export default connect (
+export default connect(
     mapStateToProps,
     {
         getExerciseById,
