@@ -71,7 +71,7 @@ class HeaderDropdown extends Component {
       <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggle}>
         <DropdownToggle nav>
             <span className="header-dropdown-user-info">Welcome {this.getUserDetail()}</span>
-            <img src={this.props.currentUser.pic_url != '' ? this.props.currentUser.pic_url : '/img/generic-avatar-icon.png'} className="img-avatar" alt={this.props.currentUser.email}/>
+            <img src={this.props.currentUser.pic_url != '' && this.props.currentUser.pic_url != null ? this.props.currentUser.pic_url : '/img/generic-avatar-icon.png'} className="img-avatar" alt={this.props.currentUser.email}/>
         </DropdownToggle>
         <DropdownMenu right>
           <DropdownItem><i className="fa fa-lock"></i><NavLink to='/auth/logout'>Logout</NavLink></DropdownItem>

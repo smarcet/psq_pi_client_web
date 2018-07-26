@@ -6,16 +6,19 @@ export const RETRIEVED_AVAILABLE_EXERCISES = 'RETRIEVED_AVAILABLE_EXERCISES';
 export const RETRIEVED_EXERCISE = 'RETRIEVED_EXERCISE';
 export const EXERCISE_STARTED = 'EXERCISE_STARTED';
 export const EXERCISE_SUBMITTED = 'EXERCISE_SUBMITTED';
+export const EXERCISE_STARTED_ADD_SECOND = 'EXERCISE_STARTED_ADD_SECOND';
+export const SET_EXERCISE_STATUS = 'EXERCISE_INITIAL_STATUS';
+export const SET_STREAM_STATUS = 'SET_STREAM_STATUS';
 
 export const getAvailableExercises = (currentPage = 1, pageSize = DEFAULT_PAGE_SIZE, searchTerm = '', ordering = 'id') => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { token, currentDevice }           = loggedUserState;
-    let apiBaseUrl          = process.env['API_BASE_URL'];
+    let {loggedUserState} = getState();
+    let {token, currentDevice} = loggedUserState;
+    let apiBaseUrl = process.env['API_BASE_URL'];
 
     let params = {
-        token : token,
+        token: token,
         page: currentPage,
-        page_size : pageSize,
+        page_size: pageSize,
     };
 
     getRequest(
@@ -32,12 +35,12 @@ export const getAvailableExercises = (currentPage = 1, pageSize = DEFAULT_PAGE_S
 };
 
 export const getExerciseById = (exerciseId) => (dispatch, getState) => {
-    let { loggedUserState } = getState();
-    let { token }           = loggedUserState;
-    let apiBaseUrl          = process.env['API_BASE_URL'];
+    let {loggedUserState} = getState();
+    let {token} = loggedUserState;
+    let apiBaseUrl = process.env['API_BASE_URL'];
 
     let params = {
-        token : token,
+        token: token,
     };
 
     return getRequest(
@@ -55,13 +58,13 @@ export const getExerciseById = (exerciseId) => (dispatch, getState) => {
 
 export const startExerciseRecordingJob = (exercise) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { token, currentUser, currentDevice } = loggedUserState;
-    let apiBaseUrl          = process.env['PI_API_BASE_URL'];
-
+    let {loggedUserState} = getState();
+    let {token, currentUser, currentDevice} = loggedUserState;
+    let apiBaseUrl = process.env['PI_API_BASE_URL'];
 
     let params = {
-        token : token,
+        token: token,
+        stream_key: currentDevice.stream_key
     };
 
     return postRequest(
@@ -78,14 +81,35 @@ export const startExerciseRecordingJob = (exercise) => (dispatch, getState) => {
     });
 }
 
+export const addExerciseSecond = () => (dispatch) => {
+    dispatch({
+        type: EXERCISE_STARTED_ADD_SECOND,
+        payload: {}
+    });
+}
+
+export const setExerciseStatus = (status) => (dispatch) => {
+    dispatch({
+        type: SET_EXERCISE_STATUS,
+        payload: status
+    });
+}
+
+export const setStreamStatus = (status)  => (dispatch) => {
+    dispatch({
+        type: SET_STREAM_STATUS,
+        payload: status
+    });
+}
+
 export const stopExerciseRecordingJob = (exercise, job) => (dispatch, getState) => {
 
-    let { loggedUserState } = getState();
-    let { token, currentUser, currentDevice } = loggedUserState;
-    let apiBaseUrl          = process.env['PI_API_BASE_URL'];
+    let {loggedUserState} = getState();
+    let {token, currentUser, currentDevice} = loggedUserState;
+    let apiBaseUrl = process.env['PI_API_BASE_URL'];
 
     let params = {
-        token : token,
+        token: token,
     };
 
     return putRequest(

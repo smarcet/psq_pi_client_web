@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 
-export const STREAM_STATUS_OK = 'STREAM_STATUS_OK';
-export const STREAM_STATUS_ERROR = 'STREAM_STATUS_ERROR';
+import {STREAM_STATUS_OK, STREAM_STATUS_ERROR} from '../models/stream';
 const STATUS_CHECKER_INTERVAL_MS = 1000;
 
 export class StreamStatusChecker extends Component

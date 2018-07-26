@@ -10,12 +10,10 @@ import swal from "sweetalert2";
 import T from 'i18n-react';
 import 'sweetalert2/dist/sweetalert2.css';
 import {connect} from 'react-redux'
-import {StreamStatusChecker, STREAM_STATUS_OK, STREAM_STATUS_ERROR} from '../components/stream-status-checker';
-import {getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob} from '../actions/exercises-actions';
+import {STREAM_STATUS_OK, STREAM_STATUS_ERROR} from '../models/stream';
+import {EXERCISE_INITIAL_STATUS, EXERCISE_RUNNING_STATUS, EXERCISE_STARTING_STATUS} from "../models/exercise";
+import {getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob, addExerciseSecond, setExerciseStatus, setStreamStatus} from '../actions/exercises-actions';
 
-const EXERCISE_INITIAL_STATUS = 0;
-const EXERCISE_STARTING_STATUS = 1;
-const EXERCISE_RUNNING_STATUS = 2;
 
 class ExercisePlayer extends Component {
 
@@ -23,12 +21,9 @@ class ExercisePlayer extends Component {
         super(props);
         this.startExercise = this.startExercise.bind(this);
         this.state = {
-            exerciseStatus: EXERCISE_INITIAL_STATUS,
-            seconds: 0,
             interval: 0,
             readySeconds: 5,
             readyInterval: 0,
-            streamStatus: STREAM_STATUS_OK
         }
         this.runTimer = this.runTimer.bind(this);
         this.startExercise = this.startExercise.bind(this);
@@ -43,7 +38,7 @@ class ExercisePlayer extends Component {
         console.log('onStreamLoadError');
         let player = document.getElementById("stream_player")
         player.src = "/img/stream_error.jpg"
-        this.setState({...this.state, streamStatus: STREAM_STATUS_ERROR});
+        this.props.setStreamStatus(STREAM_STATUS_ERROR);
     }
 
     onStreamLoad() {
@@ -62,6 +57,14 @@ class ExercisePlayer extends Component {
         });
     }
 
+    componentDidMount(){
+        let {currentExercise, exerciseStatus, streamStatus} = this.props;
+        if(currentExercise === null) return;
+        if(exerciseStatus == EXERCISE_RUNNING_STATUS){
+            this.startRunningTimer()
+        }
+    }
+
     renderTimerReady() {
         let {readySeconds} = this.state;
         if (readySeconds == 0)
@@ -72,7 +75,8 @@ class ExercisePlayer extends Component {
     startExercise() {
         this.props.startExerciseRecordingJob(this.props.currentExercise).then(() => {
             let readyInterval = window.setInterval(this.runReadyTimer, 1000);
-            this.setState({...this.state, exerciseStatus: EXERCISE_STARTING_STATUS, readyInterval, readySeconds: 5});
+            this.setState({...this.state, readyInterval, readySeconds: 5});
+            this.props.setExerciseStatus(EXERCISE_STARTING_STATUS);
         });
     }
 
@@ -96,7 +100,8 @@ class ExercisePlayer extends Component {
                         text: T.translate('Your exam was successfully submitted'),
                         type: 'success'
                     });
-                    this.setState({...this.state, exerciseStatus: EXERCISE_INITIAL_STATUS, seconds: 0, interval: null});
+                    this.setState({...this.state, interval: null});
+                    this.props.setExerciseStatus(EXERCISE_INITIAL_STATUS);
                     this.props.history.push("/auth/exercises");
                 });
 
@@ -105,26 +110,31 @@ class ExercisePlayer extends Component {
     }
 
     runTimer() {
-        this.setState({...this.state, seconds: this.state.seconds + 1});
+       this.props.addExerciseSecond();
     }
 
     runReadyTimer() {
-        let {readySeconds, readyInterval, interval, seconds, exerciseStatus} = this.state;
+        let {readySeconds, readyInterval, interval} = this.state;
         readySeconds = readySeconds - 1;
         if (readySeconds < 0) {
             window.clearInterval(readyInterval);
             readyInterval = 0;
             interval = window.setInterval(this.runTimer, 1000);
-            seconds = 0;
-            exerciseStatus = EXERCISE_RUNNING_STATUS;
+            this.props.setExerciseStatus(EXERCISE_RUNNING_STATUS);
         }
-        this.setState({...this.state, readySeconds, readyInterval, interval, seconds, exerciseStatus});
+        this.setState({...this.state, readySeconds, readyInterval, interval});
+    }
+
+    startRunningTimer(){
+        let interval = window.setInterval(this.runTimer, 1000);
+        this.props.setExerciseStatus(EXERCISE_RUNNING_STATUS);
+        this.setState({...this.state, interval});
     }
 
     renderTimer() {
-        let {seconds} = this.state;
-        let leftSeconds = seconds % 60;
-        let minutes = Math.floor(seconds / 60);
+        let { timer } = this.props;
+        let leftSeconds = timer % 60;
+        let minutes = Math.floor(timer / 60);
         if (leftSeconds < 10) {
             leftSeconds = `0${leftSeconds}`;
         }
@@ -136,8 +146,7 @@ class ExercisePlayer extends Component {
 
     render() {
         let streamUrl = process.env['LOCAL_STREAM_URL'];
-        let {exerciseStatus, streamStatus} = this.state;
-        let {currentExercise} = this.props;
+        let {currentExercise, exerciseStatus, streamStatus} = this.props;
         if (currentExercise == null) return null;
         return (
             <div className="animated fadeIn">
@@ -196,7 +205,10 @@ class ExercisePlayer extends Component {
 
 const mapStateToProps = ({exerciseStateState}) => ({
     currentExercise: exerciseStateState.currentExercise,
-    currentRecordingJob: exerciseStateState.currentRecordingJob
+    currentRecordingJob: exerciseStateState.currentRecordingJob,
+    timer: exerciseStateState.timer,
+    exerciseStatus: exerciseStateState.exerciseStatus,
+    streamStatus:  exerciseStateState.streamStatus,
 });
 
 export default connect(
@@ -205,5 +217,8 @@ export default connect(
         getExerciseById,
         startExerciseRecordingJob,
         stopExerciseRecordingJob,
+        addExerciseSecond,
+        setExerciseStatus,
+        setStreamStatus
     }
 )(ExercisePlayer);
