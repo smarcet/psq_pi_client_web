@@ -1,6 +1,8 @@
-import {createAction, getRequest, deleteRequest, putRequest, postRequest} from "./base-actions";
+import {createAction, getRequest, deleteRequest, putRequest, postRequest, VALIDATE, stopLoading} from "./base-actions";
 import {authErrorHandler, START_LOADING, STOP_LOADING} from "./base-actions";
 import {DEFAULT_PAGE_SIZE} from "../constants";
+import swal from "sweetalert2";
+import T from "i18n-react/dist/i18n-react";
 
 export const RETRIEVED_AVAILABLE_EXERCISES = 'RETRIEVED_AVAILABLE_EXERCISES';
 export const RETRIEVED_EXERCISE = 'RETRIEVED_EXERCISE';
@@ -9,6 +11,10 @@ export const EXERCISE_SUBMITTED = 'EXERCISE_SUBMITTED';
 export const EXERCISE_STARTED_ADD_SECOND = 'EXERCISE_STARTED_ADD_SECOND';
 export const SET_EXERCISE_STATUS = 'EXERCISE_INITIAL_STATUS';
 export const SET_STREAM_STATUS = 'SET_STREAM_STATUS';
+export const BACKGROUND_PROCESS_CAPTURE_OK = 'BACKGROUND_PROCESS_CAPTURE_OK';
+export const BACKGROUND_PROCESS_CAPTURE_ERROR = 'BACKGROUND_PROCESS_CAPTURE_ERROR';
+export const BACKGROUND_PROCESS_STREAMING_OK = 'BACKGROUND_PROCESS_STREAMING_OK';
+export const BACKGROUND_PROCESS_STREAMING_ERROR = 'BACKGROUND_PROCESS_STREAMING_ERROR';
 
 export const getAvailableExercises = (currentPage = 1, pageSize = DEFAULT_PAGE_SIZE, searchTerm = '', ordering = 'id') => (dispatch, getState) => {
     let {loggedUserState} = getState();
@@ -126,3 +132,49 @@ export const stopExerciseRecordingJob = (exercise, job) => (dispatch, getState) 
     });
 }
 
+
+const backgroundProcessCaptureErrorHandler = (err, res) => (dispatch) => {
+    dispatch({
+        type: BACKGROUND_PROCESS_CAPTURE_ERROR,
+        payload: {}
+    });
+}
+
+const backgroundProcessStreamingErrorHandler = (err, res) => (dispatch) => {
+    dispatch({
+        type: BACKGROUND_PROCESS_STREAMING_ERROR,
+        payload: {}
+    });
+}
+
+export const checkBackgroundProcessCapture = () => (dispatch, getState) => {
+    let { exercisePlayerState } = getState();
+    let {currentRecordingJob} = exercisePlayerState;
+    let apiBaseUrl = process.env['PI_API_BASE_URL'];
+
+    return getRequest(
+       null,
+        createAction(BACKGROUND_PROCESS_CAPTURE_OK),
+        `${apiBaseUrl}/processes/${currentRecordingJob.pid_capture}/exists`,
+        {},
+        backgroundProcessCaptureErrorHandler,
+    )({})(dispatch).then((payload) => {
+
+    });
+}
+
+export const checkBackgroundProcessStreaming = () => (dispatch, getState) => {
+    let { exercisePlayerState } = getState();
+    let {currentRecordingJob} = exercisePlayerState;
+    let apiBaseUrl = process.env['PI_API_BASE_URL'];
+
+    return getRequest(
+        null,
+        createAction(BACKGROUND_PROCESS_STREAMING_OK),
+        `${apiBaseUrl}/processes/${currentRecordingJob.pid_stream}/exists`,
+        {},
+        backgroundProcessStreamingErrorHandler,
+    )({})(dispatch).then((payload) => {
+
+    });
+}

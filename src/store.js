@@ -19,7 +19,7 @@ const reducers = persistCombineReducers(config, {
     loggedUserState: loggedUserReducer,
     baseState: baseReducer,
     exercisesListState: exercisesListReducer,
-    exerciseStateState: exercisePlayerReducer,
+    exercisePlayerState: exercisePlayerReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

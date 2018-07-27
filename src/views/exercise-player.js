@@ -12,7 +12,8 @@ import 'sweetalert2/dist/sweetalert2.css';
 import {connect} from 'react-redux'
 import {STREAM_STATUS_OK, STREAM_STATUS_ERROR} from '../models/stream';
 import {EXERCISE_INITIAL_STATUS, EXERCISE_RUNNING_STATUS, EXERCISE_STARTING_STATUS} from "../models/exercise";
-import {getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob, addExerciseSecond, setExerciseStatus, setStreamStatus} from '../actions/exercises-actions';
+import {getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob, addExerciseSecond, setExerciseStatus,
+        setStreamStatus, checkBackgroundProcessStreaming, checkBackgroundProcessCapture} from '../actions/exercises-actions';
 
 
 class ExercisePlayer extends Component {
@@ -111,6 +112,8 @@ class ExercisePlayer extends Component {
 
     runTimer() {
        this.props.addExerciseSecond();
+       this.props.checkBackgroundProcessStreaming();
+        this.props.checkBackgroundProcessCapture();
     }
 
     runReadyTimer() {
@@ -145,7 +148,6 @@ class ExercisePlayer extends Component {
     }
 
     render() {
-        let streamUrl = process.env['LOCAL_STREAM_URL'];
         let {currentExercise, exerciseStatus, streamStatus} = this.props;
         if (currentExercise == null) return null;
         return (
@@ -203,12 +205,14 @@ class ExercisePlayer extends Component {
     }
 }
 
-const mapStateToProps = ({exerciseStateState}) => ({
-    currentExercise: exerciseStateState.currentExercise,
-    currentRecordingJob: exerciseStateState.currentRecordingJob,
-    timer: exerciseStateState.timer,
-    exerciseStatus: exerciseStateState.exerciseStatus,
-    streamStatus:  exerciseStateState.streamStatus,
+const mapStateToProps = ({exercisePlayerState}) => ({
+    currentExercise: exercisePlayerState.currentExercise,
+    currentRecordingJob: exercisePlayerState.currentRecordingJob,
+    timer: exercisePlayerState.timer,
+    exerciseStatus: exercisePlayerState.exerciseStatus,
+    streamStatus:  exercisePlayerState.streamStatus,
+    backgroundProcessStreamingStatus: exercisePlayerState.backgroundProcessStreamingStatus,
+    backgroundProcessCaptureStatus: exercisePlayerState.backgroundProcessCaptureStatus,
 });
 
 export default connect(
@@ -219,6 +223,8 @@ export default connect(
         stopExerciseRecordingJob,
         addExerciseSecond,
         setExerciseStatus,
-        setStreamStatus
+        setStreamStatus,
+        checkBackgroundProcessStreaming,
+        checkBackgroundProcessCapture,
     }
 )(ExercisePlayer);
