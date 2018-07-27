@@ -156,11 +156,8 @@ export const checkBackgroundProcessCapture = () => (dispatch, getState) => {
        null,
         createAction(BACKGROUND_PROCESS_CAPTURE_OK),
         `${apiBaseUrl}/processes/${currentRecordingJob.pid_capture}/exists`,
-        {},
         backgroundProcessCaptureErrorHandler,
-    )({})(dispatch).then((payload) => {
-
-    });
+    )({})(dispatch);
 }
 
 export const checkBackgroundProcessStreaming = () => (dispatch, getState) => {
@@ -172,9 +169,6 @@ export const checkBackgroundProcessStreaming = () => (dispatch, getState) => {
         null,
         createAction(BACKGROUND_PROCESS_STREAMING_OK),
         `${apiBaseUrl}/processes/${currentRecordingJob.pid_stream}/exists`,
-        {},
         backgroundProcessStreamingErrorHandler,
-    )({})(dispatch).then((payload) => {
-
-    });
+    )({})(dispatch);
 }
