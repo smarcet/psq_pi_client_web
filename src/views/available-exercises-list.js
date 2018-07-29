@@ -13,6 +13,7 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
+    Badge,
 } from 'reactstrap';
 
 import T from 'i18n-react';
@@ -73,7 +74,7 @@ class AvailableExercisesList extends Component
                                             <ListGroupItem key={exercise.id}>
                                                 <Row>
                                                     <Col xs="10" lg="10">
-                                                        <ListGroupItemHeading>{exercise.title}</ListGroupItemHeading>
+                                                        <ListGroupItemHeading>{exercise.title}&nbsp;{exercise.type == 2 &&  <Badge color="success">{T.translate("Tutorial")}</Badge>}</ListGroupItemHeading>
                                                         <ListGroupItemText>
                                                             {exercise.abstract}
                                                         </ListGroupItemText>

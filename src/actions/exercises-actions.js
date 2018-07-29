@@ -9,6 +9,7 @@ export const RETRIEVED_EXERCISE = 'RETRIEVED_EXERCISE';
 export const EXERCISE_STARTED = 'EXERCISE_STARTED';
 export const EXERCISE_SUBMITTED = 'EXERCISE_SUBMITTED';
 export const EXERCISE_STARTED_ADD_SECOND = 'EXERCISE_STARTED_ADD_SECOND';
+export const EXERCISE_ABORTED = 'EXERCISE_ABORTED';
 export const SET_EXERCISE_STATUS = 'EXERCISE_INITIAL_STATUS';
 export const SET_STREAM_STATUS = 'SET_STREAM_STATUS';
 export const BACKGROUND_PROCESS_CAPTURE_OK = 'BACKGROUND_PROCESS_CAPTURE_OK';
@@ -110,17 +111,43 @@ export const setStreamStatus = (status)  => (dispatch) => {
 
 export const stopExerciseRecordingJob = (exercise, job) => (dispatch, getState) => {
 
-    let {loggedUserState} = getState();
-    let {token, currentUser, currentDevice} = loggedUserState;
+    let {loggedUserState, exercisePlayerState} = getState();
+    let {currentUser, currentDevice} = loggedUserState;
+    let {timer} = exercisePlayerState
     let apiBaseUrl = process.env['PI_API_BASE_URL'];
 
     let params = {
-        token: token,
+        timer: timer
     };
 
     return putRequest(
         createAction(START_LOADING),
         createAction(EXERCISE_SUBMITTED),
+        `${apiBaseUrl}/devices/${currentDevice.id}/users/${currentUser.id}/exercises/${exercise.id}/record-jobs/${job.id}`,
+        {},
+        authErrorHandler,
+    )(params)(dispatch).then((payload) => {
+        dispatch({
+            type: STOP_LOADING,
+            payload: {}
+        });
+    });
+}
+
+export const abortExercise = (exercise, job) => (dispatch, getState) => {
+
+    let {loggedUserState, exercisePlayerState} = getState();
+    let {currentUser, currentDevice} = loggedUserState;
+    let {timer} = exercisePlayerState
+    let apiBaseUrl = process.env['PI_API_BASE_URL'];
+
+    let params = {
+        timer: timer
+    };
+
+    return deleteRequest(
+        createAction(START_LOADING),
+        createAction(EXERCISE_ABORTED),
         `${apiBaseUrl}/devices/${currentDevice.id}/users/${currentUser.id}/exercises/${exercise.id}/record-jobs/${job.id}`,
         {},
         authErrorHandler,

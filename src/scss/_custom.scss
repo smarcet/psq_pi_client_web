@@ -96,21 +96,16 @@
   bottom: 0;
   left: 0;
   right: 0;
-  text-align: center;
-}
-
-.img-overlay1:before {
-  content: ' ';
-  display: block;
-  /* adjust 'height' to position overlay content vertically */
-  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .img-overlay2 {
   position: absolute;
   top: 1%;
   bottom: 0;
-  left: 3%;
+  left: 4%;
   right: 0;
   text-align: left;
 }
@@ -155,6 +150,7 @@
   border-radius: 50%;
   font-size: xx-large;
 }
+
 
 .btn-right{
   float: right;

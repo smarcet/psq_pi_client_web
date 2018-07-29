@@ -6,7 +6,8 @@ import {
     EXERCISE_STARTED_ADD_SECOND,
     SET_EXERCISE_STATUS,
     SET_STREAM_STATUS, BACKGROUND_PROCESS_CAPTURE_OK, BACKGROUND_PROCESS_CAPTURE_ERROR, BACKGROUND_PROCESS_STREAMING_OK,
-    BACKGROUND_PROCESS_STREAMING_ERROR
+    BACKGROUND_PROCESS_STREAMING_ERROR,
+    EXERCISE_ABORTED
 } from "../actions/exercises-actions";
 
 import {EXERCISE_INITIAL_STATUS } from "../models/exercise";
@@ -40,6 +41,11 @@ const exercisePlayerReducer = (state = DEFAULT_STATE, action) => {
         }
             break;
         case RETRIEVED_AVAILABLE_EXERCISES:{
+            return DEFAULT_STATE;
+        }
+        break;
+        case EXERCISE_ABORTED:
+        {
             return DEFAULT_STATE;
         }
         break;
