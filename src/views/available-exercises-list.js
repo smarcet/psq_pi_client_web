@@ -33,8 +33,7 @@ class AvailableExercisesList extends Component
     }
 
     componentWillMount () {
-        this.props.getAvailableExercises(1, 9999999);
-
+        this.props.getAvailableExercises(1, Number.MAX_SAFE_INTEGER);
     }
 
     isOpen(exercise){
@@ -70,11 +69,11 @@ class AvailableExercisesList extends Component
                                 {availableExercises.length > 0 &&
                                 <ListGroup>
                                     {
-                                        availableExercises.map((exercise) =>
+                                        availableExercises.map((exercise, idx) =>
                                             <ListGroupItem key={exercise.id}>
                                                 <Row>
                                                     <Col xs="10" lg="10">
-                                                        <ListGroupItemHeading>{exercise.title}&nbsp;{exercise.type == 2 &&  <Badge color="success">{T.translate("Tutorial")}</Badge>}</ListGroupItemHeading>
+                                                        <ListGroupItemHeading>{exercise.title}&nbsp;<i title={T.translate("Created Date")} className="fa fa-clock-o"></i>&nbsp;{new Date(exercise.created).toLocaleDateString()}&nbsp;{exercise.type == 2 &&  <Badge color="success">{T.translate("Tutorial")}</Badge>}&nbsp;{idx >= 0 && idx <= 2 && <Badge color="secondary">{T.translate("New")}</Badge>}&nbsp;{exercise.allowed_tutorials.length > 0 && <i title={T.translate("Has available Tutorials")} className="fa fa-video-camera"></i>}</ListGroupItemHeading>
                                                         <ListGroupItemText>
                                                             {exercise.abstract}
                                                         </ListGroupItemText>
@@ -88,9 +87,9 @@ class AvailableExercisesList extends Component
                                                             </DropdownToggle>
                                                             <DropdownMenu>
                                                                 <DropdownItem tag="a"
-                                                                              href={`/auth/exercises/${exercise.id}/execute`}>{T.translate("Execute")}</DropdownItem>
+                                                                              href={`/auth/exercises/${exercise.id}/execute`}><i className="fa fa-play-circle"></i>&nbsp;{T.translate("Execute")}</DropdownItem>
                                                                 <DropdownItem tag="a"
-                                                                              href={`/auth/exercises/${exercise.id}/info`}>{T.translate("More info...")}</DropdownItem>
+                                                                              href={`/auth/exercises/${exercise.id}/info`}><i className="fa fa-info-circle"></i>&nbsp;{T.translate("More info...")}</DropdownItem>
                                                             </DropdownMenu>
                                                         </ButtonDropdown>
                                                     </Col>

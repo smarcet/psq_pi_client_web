@@ -13,18 +13,22 @@ class AuthorizedRoute extends React.Component {
 
                 let { location } = this.props;
                 let backUrl = location.pathname;
-                if(location.search != null && location.search != null){
+                if(backUrl == "/auth/logout")
+                    backUrl = null;
+                if(backUrl != null && location.search != null && location.search != null){
                     backUrl += location.search
                 }
-                if(location.hash != null && location.hash != null){
+                if(backUrl != null && location.hash != null && location.hash != null){
                     backUrl += location.hash
                 }
+
+                let pathname =  backUrl != null ? `/?BackUrl=${encodeURIComponent(backUrl)}`: '/';
 
                 return isLoggedUser
                     ? <Component {...props} currentUser={currentUser} loading={loading}/>
                     : <Redirect
                         to={{
-                            pathname: `/?BackUrl=${encodeURIComponent(backUrl)}`,
+                            pathname: pathname,
                             state: { from: location }
                         }}
                     />
