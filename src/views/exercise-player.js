@@ -12,7 +12,7 @@ import {EXERCISE_INITIAL_STATUS, EXERCISE_RUNNING_STATUS, EXERCISE_STARTING_STAT
 import {
     getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob, addExerciseSecond, setExerciseStatus,
     setStreamStatus, checkBackgroundProcessStreaming, checkBackgroundProcessCapture,
-    abortExercise
+    abortExercise, pingRecordingJob
 } from '../actions/exercises-actions';
 import {
     BACKGROUND_PROCESS_CAPTURE_ERROR_STATE,
@@ -121,6 +121,7 @@ class ExercisePlayer extends Component {
         this.props.addExerciseSecond();
         this.props.checkBackgroundProcessStreaming();
         this.props.checkBackgroundProcessCapture();
+        this.props.pingRecordingJob();
     }
 
     runReadyTimer() {
@@ -284,5 +285,6 @@ export default connect(
         checkBackgroundProcessStreaming,
         checkBackgroundProcessCapture,
         abortExercise,
+        pingRecordingJob,
     }
 )(ExercisePlayer);

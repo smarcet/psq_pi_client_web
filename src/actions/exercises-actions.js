@@ -199,3 +199,17 @@ export const checkBackgroundProcessStreaming = () => (dispatch, getState) => {
         backgroundProcessStreamingErrorHandler,
     )({})(dispatch);
 }
+
+export const pingRecordingJob = () => (dispatch, getState) => {
+    let { exercisePlayerState } = getState();
+    let {currentRecordingJob} = exercisePlayerState;
+    let apiBaseUrl = process.env['PI_API_BASE_URL'];
+
+    return putRequest(
+        null,
+        createAction(BACKGROUND_PROCESS_STREAMING_OK),
+        `${apiBaseUrl}/record-jobs/${currentRecordingJob.id}/ping`,
+        {},
+        backgroundProcessStreamingErrorHandler,
+    )({})(dispatch);
+}
