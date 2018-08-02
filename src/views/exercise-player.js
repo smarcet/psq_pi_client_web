@@ -257,7 +257,7 @@ class ExercisePlayer extends Component {
                                 {T.translate("Exam Share Stream URL")}
                             </p>
                             <p className="paragraph-link">
-                                <a href={this.props.currentExamShareUrl}>{this.props.currentExamShareUrl}</a>
+                                <a target="_blank" href={this.props.currentExamShareUrl}>{this.props.currentExamShareUrl}</a>
                             </p>
                             <p>
                                 <CopyToClipboard text={this.props.currentExamShareUrl}>
