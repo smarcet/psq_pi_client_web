@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {
     Row,
     Col,
+    Alert,
+    Button
 } from 'reactstrap';
 import swal from "sweetalert2";
 import T from 'i18n-react';
@@ -12,13 +14,13 @@ import {EXERCISE_INITIAL_STATUS, EXERCISE_RUNNING_STATUS, EXERCISE_STARTING_STAT
 import {
     getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob, addExerciseSecond, setExerciseStatus,
     setStreamStatus, checkBackgroundProcessStreaming, checkBackgroundProcessCapture,
-    abortExercise, pingRecordingJob
+    abortExercise, pingRecordingJob, generateShareExamUrl
 } from '../actions/exercises-actions';
 import {
     BACKGROUND_PROCESS_CAPTURE_ERROR_STATE,
     BACKGROUND_PROCESS_STREAMING_ERROR_STATE
 } from "../models/background_processes";
-
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 class ExercisePlayer extends Component {
 
@@ -29,6 +31,7 @@ class ExercisePlayer extends Component {
             interval: 0,
             readySeconds: 5,
             readyInterval: 0,
+            visibleShareUrlAlert : false,
         }
         this.displayingStreamingError = false;
         this.ignoreStreamError = false;
@@ -40,6 +43,12 @@ class ExercisePlayer extends Component {
         this.runReadyTimer = this.runReadyTimer.bind(this);
         this.onStreamLoadError = this.onStreamLoadError.bind(this);
         this.onStreamLoad = this.onStreamLoad.bind(this);
+        this.onClickShare = this.onClickShare.bind(this);
+        this.onDismissShareExercise = this.onDismissShareExercise.bind(this);
+    }
+
+    onDismissShareExercise() {
+        this.setState({ visibleShareUrlAlert: false });
     }
 
     onStreamLoadError() {
@@ -71,6 +80,21 @@ class ExercisePlayer extends Component {
         if (exerciseStatus == EXERCISE_RUNNING_STATUS) {
             this.startRunningTimer()
         }
+    }
+
+    onClickShare(){
+        if(this.props.currentExamShareUrl != null){
+            // show it
+            this._showShareUrlDialog();
+            return;
+        }
+        this.props.generateShareExamUrl(this.props.currentExercise).then(() => {
+            this._showShareUrlDialog();
+        });
+    }
+
+    _showShareUrlDialog(){
+        this.setState({ visibleShareUrlAlert: true });
     }
 
     renderTimerReady() {
@@ -224,6 +248,23 @@ class ExercisePlayer extends Component {
                 <Row>
                     <Col xs="12" lg="12">
                         <h2>{T.translate("Exercise {exercise_name}", {exercise_name: currentExercise.title})}</h2>
+                        <Button color="warning" className="share-button"
+                                onClick={this.onClickShare}
+                                outline><i className="fa fa-share-alt"></i>&nbsp;{T.translate("Share It")}
+                        </Button>
+                        <Alert color="info" isOpen={this.state.visibleShareUrlAlert} toggle={this.onDismissShareExercise}>
+                            <p>
+                                {T.translate("Exam Share Stream URL")}
+                            </p>
+                            <p className="paragraph-link">
+                                <a href={this.props.currentExamShareUrl}>{this.props.currentExamShareUrl}</a>
+                            </p>
+                            <p>
+                                <CopyToClipboard text={this.props.currentExamShareUrl}>
+                                    <Button className="copy-clipboard-button"><i className="fa fa-copy"></i>&nbsp;{T.translate("Copy to Clipboard")}</Button>
+                                </CopyToClipboard>
+                            </p>
+                        </Alert>
                         <div className="img-wrapper">
                             <img className="rounded img-fluid mx-auto d-block"
                                  src="/img/video_thumbnail_generic.png"
@@ -242,8 +283,7 @@ class ExercisePlayer extends Component {
                             }
                             {exerciseStatus == EXERCISE_STARTING_STATUS &&
                             <div className="img-overlay3">
-                                                <span className="exercise-timer-ready" id="timer-ready"
-                                                      name="timer-ready">{this.renderTimerReady()}</span>
+                                <span className="exercise-timer-ready" id="timer-ready" name="timer-ready">{this.renderTimerReady()}</span>
                             </div>
                             }
                             {exerciseStatus == EXERCISE_RUNNING_STATUS &&
@@ -253,6 +293,7 @@ class ExercisePlayer extends Component {
                                     <i className="fa fa-stop-circle"></i>
                                 </button>
                                 {this.renderTimer()}
+                                <span className="device-serial">{this.props.currentDevice.serial}</span>
                             </div>
                             }
                         </div>
@@ -263,7 +304,7 @@ class ExercisePlayer extends Component {
     }
 }
 
-const mapStateToProps = ({exercisePlayerState}) => ({
+const mapStateToProps = ({exercisePlayerState, loggedUserState}) => ({
     currentExercise: exercisePlayerState.currentExercise,
     currentRecordingJob: exercisePlayerState.currentRecordingJob,
     timer: exercisePlayerState.timer,
@@ -271,6 +312,8 @@ const mapStateToProps = ({exercisePlayerState}) => ({
     streamStatus: exercisePlayerState.streamStatus,
     backgroundProcessStreamingStatus: exercisePlayerState.backgroundProcessStreamingStatus,
     backgroundProcessCaptureStatus: exercisePlayerState.backgroundProcessCaptureStatus,
+    currentExamShareUrl: exercisePlayerState.currentExamShareUrl,
+    currentDevice: loggedUserState.currentDevice
 });
 
 export default connect(
@@ -286,5 +329,6 @@ export default connect(
         checkBackgroundProcessCapture,
         abortExercise,
         pingRecordingJob,
+        generateShareExamUrl,
     }
 )(ExercisePlayer);

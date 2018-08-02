@@ -16,6 +16,7 @@ export const BACKGROUND_PROCESS_CAPTURE_OK = 'BACKGROUND_PROCESS_CAPTURE_OK';
 export const BACKGROUND_PROCESS_CAPTURE_ERROR = 'BACKGROUND_PROCESS_CAPTURE_ERROR';
 export const BACKGROUND_PROCESS_STREAMING_OK = 'BACKGROUND_PROCESS_STREAMING_OK';
 export const BACKGROUND_PROCESS_STREAMING_ERROR = 'BACKGROUND_PROCESS_STREAMING_ERROR';
+export const EXAM_SHARE_URL_CREATED = 'EXAM_SHARE_URL_CREATED';
 
 export const getAvailableExercises = (currentPage = 1, pageSize = DEFAULT_PAGE_SIZE, searchTerm = '', ordering = 'id') => (dispatch, getState) => {
     let {loggedUserState} = getState();
@@ -212,4 +213,24 @@ export const pingRecordingJob = () => (dispatch, getState) => {
         {},
         backgroundProcessStreamingErrorHandler,
     )({})(dispatch);
+}
+
+export const generateShareExamUrl = (exercise) => (dispatch, getState) => {
+    let apiBaseUrl = process.env['PI_API_BASE_URL'];
+    let {loggedUserState} = getState();
+    let {currentUser, currentDevice} = loggedUserState;
+
+    let params = {
+        exercise_id : exercise.id,
+        exercise_max_duration: exercise.max_duration,
+        user_id : currentUser.id,
+        device_id: currentDevice.id
+    };
+
+    return getRequest(
+        null,
+        createAction(EXAM_SHARE_URL_CREATED),
+        `${apiBaseUrl}/exams/current/share`,
+        authErrorHandler,
+    )(params)(dispatch);
 }

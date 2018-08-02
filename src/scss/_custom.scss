@@ -118,10 +118,26 @@
 
 .exercise-timer{
   font-weight: bold;
-  font-size: 20pt;
+  font-size: x-large;
   margin-left: 20px;
   color: gainsboro;
   vertical-align: middle;
+}
+
+.device-serial{
+  font-weight: bold;
+  font-size: x-large;
+  color: gainsboro;
+  vertical-align: middle;
+  float: right;
+  margin-right: 5%;
+  margin-top: 1%;
+}
+
+@media only screen and (max-width: 800px) {
+  .device-serial{
+    display: none;
+  }
 }
 
 .img-overlay3 {
@@ -192,4 +208,22 @@
   0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
   50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
   100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+}
+
+.alert-dismissible{
+  padding:  0 !important;
+  p{
+    text-align: center;
+  }
+}
+
+.paragraph-link{
+  word-wrap: break-word;
+}
+.share-button{
+  margin-bottom: 2%;
+}
+
+.copy-clipboard-button{
+  margin-left: 1%;
 }

@@ -7,7 +7,7 @@ import {
     SET_EXERCISE_STATUS,
     SET_STREAM_STATUS, BACKGROUND_PROCESS_CAPTURE_OK, BACKGROUND_PROCESS_CAPTURE_ERROR, BACKGROUND_PROCESS_STREAMING_OK,
     BACKGROUND_PROCESS_STREAMING_ERROR,
-    EXERCISE_ABORTED
+    EXERCISE_ABORTED, EXAM_SHARE_URL_CREATED
 } from "../actions/exercises-actions";
 
 import {EXERCISE_INITIAL_STATUS } from "../models/exercise";
@@ -28,6 +28,7 @@ const DEFAULT_STATE = {
    streamStatus: STREAM_STATUS_OK,
    backgroundProcessStreamingStatus: BACKGROUND_PROCESS_STREAMING_INITIAL_STATE,
    backgroundProcessCaptureStatus: BACKGROUND_PROCESS_CAPTURE_INITIAL_STATE,
+   currentExamShareUrl : null
 }
 
 const exercisePlayerReducer = (state = DEFAULT_STATE, action) => {
@@ -40,6 +41,13 @@ const exercisePlayerReducer = (state = DEFAULT_STATE, action) => {
             };
         }
             break;
+        case EXAM_SHARE_URL_CREATED:{
+            return {
+                ...state,
+                currentExamShareUrl: action.payload.response.url
+            };
+        }
+        break;
         case RETRIEVED_AVAILABLE_EXERCISES:{
             return DEFAULT_STATE;
         }
