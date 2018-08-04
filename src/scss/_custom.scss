@@ -167,6 +167,12 @@
   font-size: xx-large;
 }
 
+.device-registration-container{
+  p{
+    text-align: center;
+  }
+}
+
 
 .btn-right{
   float: right;
@@ -222,6 +228,11 @@
 }
 .share-button{
   margin-bottom: 2%;
+}
+
+.abort-button{
+  margin-bottom: 2%;
+  margin-left: 1%;
 }
 
 .copy-clipboard-button{

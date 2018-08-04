@@ -237,7 +237,6 @@ class ExercisePlayer extends Component {
                 type: 'error'
             });
 
-
             let {interval, backgroundInterval} = this.state;
             window.clearInterval(interval);
             window.clearInterval(backgroundInterval);
@@ -300,6 +299,11 @@ class ExercisePlayer extends Component {
                                 onClick={this.onClickShare}
                                 outline><i className="fa fa-share-alt"></i>&nbsp;{T.translate("Share It")}
                         </Button>
+                        {exerciseStatus == EXERCISE_RUNNING_STATUS &&
+                        <Button className="abort-button" color="danger" onClick={this.abortExercise} outline>
+                            <i className="fa fa-trash"></i>&nbsp;{T.translate("Abort It")}
+                        </Button>
+                        }
                         <Alert color="info" isOpen={this.state.visibleShareUrlAlert} toggle={this.onDismissShareExercise}>
                             <p>
                                 {T.translate("Exam Share Stream URL")}
@@ -311,9 +315,6 @@ class ExercisePlayer extends Component {
                                 <CopyToClipboard text={this.props.currentExamShareUrl}>
                                     <Button className="copy-clipboard-button"><i className="fa fa-copy"></i>&nbsp;{T.translate("Copy to Clipboard")}</Button>
                                 </CopyToClipboard>
-                                {   exerciseStatus == EXERCISE_RUNNING_STATUS &&
-                                    <Button color="danger" onClick={this.abortExercise}>{T.translate("Abort It")}</Button>
-                                }
                             </p>
                         </Alert>
                         <div className="img-wrapper">
