@@ -31,6 +31,7 @@ class ExercisePlayer extends Component {
             interval: 0,
             readySeconds: 5,
             readyInterval: 0,
+            backgroundInterval: 0,
             visibleShareUrlAlert : false,
         }
         this.displayingStreamingError = false;
@@ -45,6 +46,8 @@ class ExercisePlayer extends Component {
         this.onStreamLoad = this.onStreamLoad.bind(this);
         this.onClickShare = this.onClickShare.bind(this);
         this.onDismissShareExercise = this.onDismissShareExercise.bind(this);
+        this.abortExercise = this.abortExercise.bind(this);
+        this.runBackgroundJobs = this.runBackgroundJobs.bind(this);
     }
 
     onDismissShareExercise() {
@@ -124,8 +127,10 @@ class ExercisePlayer extends Component {
             if (result.value) {
                 // call to local api to stop recording it and upload file
 
-                let {interval} = this.state;
+                let {interval, backgroundInterval} = this.state;
                 window.clearInterval(interval);
+                window.clearInterval(backgroundInterval);
+
                 this.props.stopExerciseRecordingJob(this.props.currentExercise, this.props.currentRecordingJob).then(() => {
                     swal({
                         title: T.translate('Success!!!'),
@@ -143,21 +148,26 @@ class ExercisePlayer extends Component {
 
     runTimer() {
         this.props.addExerciseSecond();
+
+    }
+
+    runBackgroundJobs(){
         this.props.checkBackgroundProcessStreaming();
         this.props.checkBackgroundProcessCapture();
         this.props.pingRecordingJob();
     }
 
     runReadyTimer() {
-        let {readySeconds, readyInterval, interval} = this.state;
+        let {readySeconds, readyInterval, interval, backgroundInterval } = this.state;
         readySeconds = readySeconds - 1;
         if (readySeconds < 0) {
             window.clearInterval(readyInterval);
             readyInterval = 0;
             interval = window.setInterval(this.runTimer, 1000);
+            backgroundInterval =  window.setInterval(this.runBackgroundJobs, 5000);
             this.props.setExerciseStatus(EXERCISE_RUNNING_STATUS);
         }
-        this.setState({...this.state, readySeconds, readyInterval, interval});
+        this.setState({...this.state, readySeconds, readyInterval, interval, backgroundInterval});
     }
 
     startRunningTimer() {
@@ -184,6 +194,30 @@ class ExercisePlayer extends Component {
                       name="timer">{minutes+':'+leftSeconds}</span>);
     }
 
+    abortExercise(){
+        swal({
+            title: T.translate('Are you sure?'),
+            text: T.translate('You will abort the exercise'),
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: T.translate('Yes, abort it!'),
+            cancelButtonText: T.translate('No, keep doing it')
+        }).then((result) => {
+            if (result.value) {
+                // call to local api to stop recording it and upload file
+
+
+                let {interval, backgroundInterval} = this.state;
+                window.clearInterval(interval);
+                window.clearInterval(backgroundInterval);
+
+                this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
+                    () =>  this.props.history.push("/auth/exercises")
+                );
+            }
+        })
+    }
+
     render() {
         let {
             timer,
@@ -203,6 +237,11 @@ class ExercisePlayer extends Component {
                 type: 'error'
             });
 
+
+            let {interval, backgroundInterval} = this.state;
+            window.clearInterval(interval);
+            window.clearInterval(backgroundInterval);
+
             this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
                 () =>  this.props.history.push("/auth/exercises")
             );
@@ -220,6 +259,11 @@ class ExercisePlayer extends Component {
             }).then((result) => {
                 if (!result.value) {
                     // abort exercise
+
+                    let {interval, backgroundInterval} = this.state;
+                    window.clearInterval(interval);
+                    window.clearInterval(backgroundInterval);
+
                     this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
                         () =>  this.props.history.push("/auth/exercises")
                     );
@@ -236,6 +280,10 @@ class ExercisePlayer extends Component {
                 text: T.translate('Video capture process is erroring right now, canceling exercise, try again later'),
                 type: 'error'
             });
+
+            let {interval, backgroundInterval} = this.state;
+            window.clearInterval(interval);
+            window.clearInterval(backgroundInterval);
 
             this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
                 () =>  this.props.history.push("/auth/exercises")
@@ -263,6 +311,9 @@ class ExercisePlayer extends Component {
                                 <CopyToClipboard text={this.props.currentExamShareUrl}>
                                     <Button className="copy-clipboard-button"><i className="fa fa-copy"></i>&nbsp;{T.translate("Copy to Clipboard")}</Button>
                                 </CopyToClipboard>
+                                {   exerciseStatus == EXERCISE_RUNNING_STATUS &&
+                                    <Button color="danger" onClick={this.abortExercise}>{T.translate("Abort It")}</Button>
+                                }
                             </p>
                         </Alert>
                         <div className="img-wrapper">
