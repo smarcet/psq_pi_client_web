@@ -86,11 +86,6 @@ class ExercisePlayer extends Component {
     }
 
     onClickShare(){
-        if(this.props.currentExamShareUrl != null){
-            // show it
-            this._showShareUrlDialog();
-            return;
-        }
         this.props.generateShareExamUrl(this.props.currentExercise).then(() => {
             this._showShareUrlDialog();
         });
@@ -246,6 +241,7 @@ class ExercisePlayer extends Component {
             );
             return null;
         }
+
         if(backgroundProcessStreamingStatus == BACKGROUND_PROCESS_STREAMING_ERROR_STATE && ! this.displayingStreamingError && !this.ignoreStreamError){
             this.displayingStreamingError = true;
             swal({
@@ -295,6 +291,7 @@ class ExercisePlayer extends Component {
                 <Row>
                     <Col xs="12" lg="12">
                         <h2>{T.translate("Exercise {exercise_name}", {exercise_name: currentExercise.title})}</h2>
+                        <hr></hr>
                         <Button color="warning" className="share-button"
                                 onClick={this.onClickShare}
                                 outline><i className="fa fa-share-alt"></i>&nbsp;{T.translate("Share It")}

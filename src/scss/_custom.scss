@@ -238,3 +238,34 @@
 .copy-clipboard-button{
   margin-left: 1%;
 }
+
+.exercise-timer-danger{
+  -webkit-animation: glowing2 1500ms infinite;
+  -moz-animation: glowing2 1500ms infinite;
+  -o-animation: glowing2 1500ms infinite;
+  animation: glowing2 1500ms infinite; color: #B20000; box-shadow: 0 0 3px #B20000;
+}
+
+@-webkit-keyframes glowing2 {
+  0% { color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+  50% { color: #FF0000; -webkit-box-shadow: 0 0 40px #FF0000; }
+  100% { color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+}
+
+@-moz-keyframes glowing2 {
+  0% { color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+  50% { color: #FF0000; -moz-box-shadow: 0 0 40px #FF0000; }
+  100% { color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+}
+
+@-o-keyframes glowing2 {
+  0% { color: #B20000; box-shadow: 0 0 3px #B20000; }
+  50% { color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+  100% { color: #B20000; box-shadow: 0 0 3px #B20000; }
+}
+
+@keyframes glowing2 {
+  0% { color: #B20000; box-shadow: 0 0 3px #B20000; }
+  50% { color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+  100% { color: #B20000; box-shadow: 0 0 3px #B20000; }
+}
