@@ -2,9 +2,6 @@ import React, {Component} from 'react';
 import {
     Row,
     Col,
-    Card,
-    CardHeader,
-    CardBody,
     Nav,
     NavItem,
     NavLink,
@@ -22,6 +19,14 @@ import {
 
 class ExerciseInfo extends Component {
 
+    constructor(props) {
+        super(props);
+        this.toggleTab = this.toggleTab.bind(this);
+        this.state = {
+            activeTab: '1',
+        };
+    }
+
     componentWillMount() {
         let exerciseId = this.props.match.params.exercise_id;
         this.props.getExerciseById(exerciseId);
@@ -31,14 +36,6 @@ class ExerciseInfo extends Component {
         let remainingSeconds = seconds % 60;
         let strRemainingSeconds = remainingSeconds < 10 ? '0'+remainingSeconds: remainingSeconds;
         return `${Math.floor(seconds / 60)}:${strRemainingSeconds}`
-    }
-
-    constructor(props) {
-        super(props);
-        this.toggleTab = this.toggleTab.bind(this);
-        this.state = {
-            activeTab: '1',
-        };
     }
 
     toggleTab(tab) {

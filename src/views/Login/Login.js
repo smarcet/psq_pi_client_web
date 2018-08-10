@@ -89,7 +89,7 @@ class Login extends Component {
                                                         onClick={(e) => this.onLoginClick(e)}>{T.translate("Login")}</Button>
                                             </Col>
                                             <Col xs="6" className="text-right">
-                                                <Button color="link" className="px-0">{T.translate("Forgot Password?")}</Button>
+
                                             </Col>
                                         </Row>
                                     </CardBody>

@@ -1,5 +1,6 @@
 import T from "i18n-react/dist/i18n-react";
-
+import { read_cookie } from 'sfcookies';
+import {USER_LOCALE_COOKIE_NAME} from "./constants";
 let language = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
 
 // language would be something like es-ES or es_ES
@@ -11,6 +12,16 @@ if (language.length > 2) {
     language = language.split("_")[0];
 }
 
-console.log(`user language is ${language}`);
+let user_language = read_cookie(USER_LOCALE_COOKIE_NAME)
 
-T.setTexts(require(`./i18n/${language}.json`));
+console.log(`browser language is ${language}`);
+console.log(`user language is ${user_language} from cookie`);
+
+if(user_language==null || user_language.length == 0) {
+    // set by default browser lang
+    T.setTexts(require(`./i18n/${language}.json`));
+}
+else{
+    T.setTexts(require(`./i18n/${user_language}.json`));
+}
+

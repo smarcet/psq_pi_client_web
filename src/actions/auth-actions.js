@@ -2,6 +2,9 @@ import {createAction, getRequest, postRequest} from "./base-actions";
 import {authErrorHandler} from "./base-actions";
 import swal from "sweetalert2";
 import T from "i18n-react/dist/i18n-react";
+import { bake_cookie, delete_cookie } from 'sfcookies';
+import {getLanguage, USER_LOCALE_COOKIE_NAME} from "../constants";
+
 export const SET_LOGGED_USER   = 'SET_LOGGED_USER';
 export const LOGOUT_USER       = 'LOGOUT_USER';
 export const REQUEST_USER_INFO = 'REQUEST_USER_INFO';
@@ -67,6 +70,15 @@ export const doLogin = (username, password, history = null, backUrl = null ) => 
                 });
                 return;
             }
+
+            // set user locale
+            let language = getLanguage(currentUser.locale);
+            if(language != null) {
+                console.log(`user locale is ${language}`);
+                bake_cookie(USER_LOCALE_COOKIE_NAME, language);
+                T.setTexts(require(`../i18n/${language}.json`));
+            }
+
             console.log(`redirecting to ${backUrl}`)
             history.push(backUrl);
         })
