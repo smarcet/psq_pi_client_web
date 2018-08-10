@@ -251,13 +251,19 @@ export const authErrorHandler = (err, res) => (dispatch) => {
 
     switch (code) {
         case 403:
-            swal("ERROR", T.translate("Not Authorized user"), "warning");
+            swal("ERROR",
+                T.translate("Not Authorized user"),
+                "warning");
             break;
         case 400:
-            swal("ERROR", T.translate("Invalid User"), "warning");
+            swal("ERROR",
+                T.translate("Invalid User"),
+                "warning");
             break;
         case 401:
-            swal("ERROR", T.translate("Not Authenticated User"), "error");
+            swal("ERROR",
+                T.translate("Not Authenticated User"),
+                "error");
             dispatch({
                 type: LOGOUT_USER,
                 payload: {
@@ -280,7 +286,9 @@ export const authErrorHandler = (err, res) => (dispatch) => {
             });
             break;
         default:
-            swal("ERROR", T.translate("Server Error"), "error");
+            swal("ERROR",
+                T.translate("Server Error"),
+                "error");
     }
 }
 
@@ -290,15 +298,21 @@ export const fetchErrorHandler = (response) => {
 
     switch (code) {
         case 403:
-            swal("ERROR", T.translate("User not Authorized"), "warning");
+            swal("ERROR",
+                T.translate("User not Authorized"),
+                "warning");
             break;
         case 401:
-            swal("ERROR", T.translate("Session expired"), "error");
+            swal("ERROR",
+                T.translate("Session expired"),
+                "error");
             break;
         case 412:
             swal("ERROR", msg, "warning");
         case 500:
-            swal("ERROR", T.translate("Server Error"), "error");
+            swal("ERROR",
+                T.translate("Server Error"),
+                "error");
     }
 }
 

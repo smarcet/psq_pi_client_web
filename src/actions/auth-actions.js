@@ -40,7 +40,9 @@ export const doLogin = (username, password, history = null, backUrl = null ) => 
 
             let { currentUser, currentDevice } = getState().loggedUserState;
             if( currentUser == null || currentUser == undefined){
-                swal("ERROR", T.translate("User not set"), "error");
+                swal("ERROR",
+                    T.translate("User not set"),
+                    "error");
                 dispatch({
                     type: LOGOUT_USER,
                     payload: {}
@@ -63,7 +65,9 @@ export const doLogin = (username, password, history = null, backUrl = null ) => 
             let devices = [...managedDevices, ...assignedDevices, ...ownedDevices];
 
             if(devices.length == 0){
-                swal("ERROR", T.translate("User is not authorized to use this device"), "error");
+                swal("ERROR",
+                    T.translate("User is not authorized to use this device"),
+                    "error");
                 dispatch({
                     type: LOGOUT_USER,
                     payload: {}
