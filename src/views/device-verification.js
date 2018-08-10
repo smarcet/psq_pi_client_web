@@ -13,7 +13,7 @@ class DeviceVerification extends Component
             return (
                 <div className="animated fadeIn device-registration-container">
                     <p>{T.translate("Performing Device Registration")}</p>
-                    <p>{T.translate("lease Wait...")}</p>
+                    <p>{T.translate("Please Wait...")}</p>
                 </div>
             );
         }
