@@ -20,8 +20,8 @@
 "GO!!":"GO!!",
 "Invalid User":"Usuario Invalido",
 "List is empty.":"La lista esta vacia.",
-"Login":"Login",
-"Logout":"Logout",
+"Login":"Ingresar",
+"Logout":"Salir",
 "MAC ADDRESS":"MAC ADDRESS",
 "More info...":"Mas informacion...",
 "Must select first an item!":"Deber seleccionar un item primero!",
@@ -62,5 +62,6 @@
 "Yes, submit it!":"SI, Enviarlo!",
 "You will abort the exercise":"Ud. Abortara el ejercicio",
 "You will submit the exercise":"Ud. enviara el ejercicio",
-"Your exam was successfully submitted":"Su examen ha sido enviado correctamente"
+"Your exam was successfully submitted":"Su examen ha sido enviado correctamente",
+"Welcome": "Bienvenido"
 }
