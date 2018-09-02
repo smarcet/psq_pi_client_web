@@ -143,7 +143,6 @@ class ExercisePlayer extends Component {
 
     runTimer() {
         this.props.addExerciseSecond();
-
     }
 
     runBackgroundJobs(){
