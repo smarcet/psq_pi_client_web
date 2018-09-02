@@ -73,7 +73,9 @@ class HeaderDropdown extends Component {
             <img src={this.props.currentUser.pic_url != '' && this.props.currentUser.pic_url != null ? this.props.currentUser.pic_url : '/img/generic-avatar-icon.png'} className="img-avatar" alt={this.props.currentUser.email}/>
         </DropdownToggle>
         <DropdownMenu right>
-          <DropdownItem><i className="fa fa-lock"></i><NavLink to='/auth/logout'>{T.translate("Logout")}</NavLink></DropdownItem>
+          <DropdownItem>
+                <i className="fa fa-lock"></i><NavLink to='/auth/logout'>{T.translate("Logout")}</NavLink>
+          </DropdownItem>
         </DropdownMenu>
       </Dropdown>
     );
