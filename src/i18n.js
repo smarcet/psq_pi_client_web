@@ -1,4 +1,4 @@
-import T from "i18n-react/dist/i18n-react";
+import T from 'i18n-react';
 import { read_cookie } from 'sfcookies';
 import {USER_LOCALE_COOKIE_NAME} from "./constants";
 let language = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage;
