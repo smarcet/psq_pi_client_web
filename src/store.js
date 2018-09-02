@@ -7,6 +7,7 @@ import storage from 'redux-persist/es/storage'
 import exercisesListReducer from "./reducers/exercises-list-reducer";
 import exercisePlayerReducer from "./reducers/exercise-player-reducer";
 import {getLanguage, USER_LOCALE_COOKIE_NAME} from "./constants";
+import T from 'i18n-react';
 import { bake_cookie, read_cookie, delete_cookie } from 'sfcookies';
 // default: localStorage if web, AsyncStorage if react-native
 
