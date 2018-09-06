@@ -13,7 +13,7 @@ class DeviceVerification extends Component
             return (
                 <div className="animated fadeIn device-registration-container">
                     <p>{T.translate("Performing Device Registration")}</p>
-                    <p>{T.translate("Please Wait...")}</p>
+                    <p>{T.translate("Please Wait")}</p>
                 </div>
             );
         }
@@ -22,7 +22,7 @@ class DeviceVerification extends Component
                 <p>{T.translate("Device Registered")}</p>
                 <p>{T.translate("SERIAL")}&nbsp;<b>{currentDevice.serial}</b></p>
                 <p>{T.translate("MAC ADDRESS")}&nbsp;<b>{currentDevice.mac_address}</b></p>
-                <p>{T.translate("Waiting for Admin Verification ...")}</p>
+                <p>{T.translate("Waiting for Activation")}</p>
             </div>
         )
     }

@@ -75,7 +75,11 @@ class AvailableExercisesList extends Component
                                                     <Col xs="10" lg="10">
                                                         <ListGroupItemHeading>{exercise.title}&nbsp;<i title={T.translate("Created Date")} className="fa fa-clock-o"></i>&nbsp;{new Date(exercise.created).toLocaleDateString()}&nbsp;{exercise.type == 2 &&  <Badge color="success">{T.translate("Tutorial")}</Badge>}&nbsp;{idx >= 0 && idx <= 2 && <Badge color="secondary">{T.translate("New")}</Badge>}&nbsp;{exercise.allowed_tutorials.length > 0 && <i title={T.translate("Has available Tutorials")} className="fa fa-video-camera"></i>}</ListGroupItemHeading>
                                                         <ListGroupItemText>
-                                                            {exercise.abstract}
+                                                            {exercise.abstract}{' '}
+                                                            {
+                                                                exercise.is_shared &&
+                                                                <Badge color="success">{T.translate("Shared")}</Badge>
+                                                            }
                                                         </ListGroupItemText>
                                                     </Col>
                                                     <Col xs="2" lg="2">
@@ -89,7 +93,7 @@ class AvailableExercisesList extends Component
                                                                 <DropdownItem tag="a"
                                                                               href={`/auth/exercises/${exercise.id}/execute`}><i className="fa fa-play-circle"></i>&nbsp;{T.translate("Execute")}</DropdownItem>
                                                                 <DropdownItem tag="a"
-                                                                              href={`/auth/exercises/${exercise.id}/info`}><i className="fa fa-info-circle"></i>&nbsp;{T.translate("More info...")}</DropdownItem>
+                                                                              href={`/auth/exercises/${exercise.id}/info`}><i className="fa fa-info-circle"></i>&nbsp;{T.translate("More info")}</DropdownItem>
                                                             </DropdownMenu>
                                                         </ButtonDropdown>
                                                     </Col>
