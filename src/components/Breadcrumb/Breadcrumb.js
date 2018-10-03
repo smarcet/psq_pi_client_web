@@ -49,7 +49,7 @@ const Breadcrumbs = ({location : {pathname}, match, ...rest}) => {
 };
 
 export default props => (
-    <div>
+    <div className="breadcrumbs-container">
         <Route path="/:path" component={Breadcrumbs} {...props} />
     </div>
 );

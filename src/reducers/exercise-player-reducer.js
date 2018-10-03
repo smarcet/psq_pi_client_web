@@ -11,7 +11,7 @@ import {
 } from "../actions/exercises-actions";
 
 import {EXERCISE_INITIAL_STATUS } from "../models/exercise";
-import {STREAM_STATUS_OK} from '../models/stream';
+import {STREAM_STATUS_INITIAL} from '../models/stream';
 import {BACKGROUND_PROCESS_CAPTURE_INITIAL_STATE,
     BACKGROUND_PROCESS_CAPTURE_WORKING_STATE,
     BACKGROUND_PROCESS_CAPTURE_ERROR_STATE,
@@ -25,7 +25,7 @@ const DEFAULT_STATE = {
    currentRecordingJob: null,
    timer : 0,
    exerciseStatus : EXERCISE_INITIAL_STATUS,
-   streamStatus: STREAM_STATUS_OK,
+   streamStatus: STREAM_STATUS_INITIAL,
    backgroundProcessStreamingStatus: BACKGROUND_PROCESS_STREAMING_INITIAL_STATE,
    backgroundProcessCaptureStatus: BACKGROUND_PROCESS_CAPTURE_INITIAL_STATE,
    currentExamShareUrl : null

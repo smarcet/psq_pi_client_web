@@ -20,7 +20,7 @@ ReactDOM.render
         <PersistGate
             onBeforeLift={onBeforeLift}
             persistor={persistor}>
-            <App />
+            <App/>
         </PersistGate>
     </Provider>,
     document.querySelector('#root')

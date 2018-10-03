@@ -38,6 +38,11 @@ var plugins = [
         ],
         {copyUnmodified: false}
     ),
+    new CopyWebpackPlugin([
+            {from: './src/manifest.json', to: 'manifest.json'}
+        ],
+        {copyUnmodified: true}
+    ),
     new webpack.DefinePlugin({
         'process.env': _(process.env)
             .pick(_.keys(dotenvConfig))

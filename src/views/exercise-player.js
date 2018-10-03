@@ -9,7 +9,10 @@ import swal from "sweetalert2";
 import T from 'i18n-react';
 import 'sweetalert2/dist/sweetalert2.css';
 import {connect} from 'react-redux'
-import {STREAM_STATUS_OK, STREAM_STATUS_ERROR} from '../models/stream';
+import {
+    STREAM_STATUS_OK, STREAM_STATUS_ERROR, STREAM_STATUS_LOADED, STREAM_STATUS_LOADING,
+    STREAM_STATUS_INITIAL
+} from '../models/stream';
 import {EXERCISE_INITIAL_STATUS, EXERCISE_RUNNING_STATUS, EXERCISE_STARTING_STATUS} from "../models/exercise";
 import {
     getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob, addExerciseSecond, setExerciseStatus,
@@ -55,14 +58,19 @@ class ExercisePlayer extends Component {
     }
 
     onStreamLoadError() {
-        console.log('onStreamLoadError');
-        let player = document.getElementById("stream_player")
+        console.log("Stream Error!");
+        let player = document.getElementById("stream_player_placeholder")
         player.src = "/img/stream_error.jpg"
         this.props.setStreamStatus(STREAM_STATUS_ERROR);
     }
 
     onStreamLoad() {
-
+        let {streamStatus} = this.props;
+        let nextStatus = streamStatus == STREAM_STATUS_LOADING ? STREAM_STATUS_LOADED : null;
+        if(nextStatus) {
+            this.props.setStreamStatus(nextStatus);
+            console.log("Stream loaded!");
+        }
     }
 
     componentWillMount() {
@@ -70,10 +78,13 @@ class ExercisePlayer extends Component {
         // get exercise ...
         console.log(`getting exercise ${exerciseId} ...`);
         this.props.getExerciseById(exerciseId).then(() => {
+            console.log(`exercise ${exerciseId} loaded!`);
+
             let streamUrl = process.env['LOCAL_STREAM_URL'];
             let player = document.getElementById("stream_player")
             let now = new Date();
             player.src = `${streamUrl}?_=${now.getTime()}`;
+            this.props.setStreamStatus(STREAM_STATUS_LOADING);
         });
     }
 
@@ -289,13 +300,15 @@ class ExercisePlayer extends Component {
             <div className="animated fadeIn">
                 <Row>
                     <Col xs="12" lg="12">
-                        <h2>{T.translate("Exercise {exercise_name}", {exercise_name: currentExercise.title})}</h2>
-                        <hr></hr>
+                        {   exerciseStatus != EXERCISE_RUNNING_STATUS &&
+                            <h2>{T.translate("Exercise {exercise_name}", {exercise_name: currentExercise.title})}</h2>
+                        }
+                        <hr className="player-divider"></hr>
                         <Button color="warning" className="share-button"
                                 onClick={this.onClickShare}
                                 outline><i className="fa fa-share-alt"></i>&nbsp;{T.translate("Share It")}
                         </Button>
-                        {exerciseStatus == EXERCISE_RUNNING_STATUS &&
+                        { exerciseStatus == EXERCISE_RUNNING_STATUS &&
                         <Button className="abort-button" color="danger" onClick={this.abortExercise} outline>
                             <i className="fa fa-trash"></i>&nbsp;{T.translate("Abort It")}
                         </Button>
@@ -314,14 +327,20 @@ class ExercisePlayer extends Component {
                             </p>
                         </Alert>
                         <div className="img-wrapper">
-                            <img className="rounded img-fluid mx-auto d-block"
+                            {streamStatus != STREAM_STATUS_LOADED &&
+                            <img className={`rounded img-fluid mx-auto d-block`}
                                  src="/img/video_thumbnail_generic.png"
+                                 id="stream_player_placeholder"
+                                 name="stream_player_placeholder"
+                            />
+                            }
+                            <img className={`rounded img-fluid mx-auto d-block img-player`}
                                  id="stream_player"
                                  name="stream_player"
                                  onError={this.onStreamLoadError}
                                  onLoad={this.onStreamLoad}
                             />
-                            {streamStatus == STREAM_STATUS_OK && exerciseStatus == EXERCISE_INITIAL_STATUS &&
+                            {streamStatus == STREAM_STATUS_LOADED && exerciseStatus == EXERCISE_INITIAL_STATUS &&
                             <div className="img-overlay1">
                                 <button className="btn btn-lg btn-success btn-player"
                                         onClick={this.startExercise}>

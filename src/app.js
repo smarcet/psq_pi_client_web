@@ -18,6 +18,7 @@ class App extends React.PureComponent {
                                          path='/auth'
                                          currentUser={this.props.currentUser}
                                          loading={this.props.loading}
+                                         exerciseStatus={this.props.exerciseStatus}
                                          component={MainLayout} />
                         <Route path="/404" component={Page404} />
                         <Route path="/500" component={Page500} />
@@ -33,11 +34,13 @@ class App extends React.PureComponent {
     }
 };
 
-const mapStateToProps = ({ loggedUserState, baseState }) => ({
+const mapStateToProps = ({ loggedUserState, baseState, exercisePlayerState }) => ({
     isLoggedUser: loggedUserState.isLoggedUser,
     currentUser: loggedUserState.currentUser,
     currentDevice: loggedUserState.currentDevice,
-    loading: baseState.loading
+    loading: baseState.loading,
+    exerciseStatus: exercisePlayerState.exerciseStatus,
+    streamStatus: exercisePlayerState.streamStatus,
 });
 
 export default connect(mapStateToProps, {

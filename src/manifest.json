@@ -1,0 +1,6 @@
+{
+  "short_name": "PSQ",
+  "name": "PSQ - Client App",
+  "display":      "standalone",
+  "orientation":  "landscape"
+}

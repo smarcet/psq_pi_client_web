@@ -9,12 +9,21 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Breadcrumb from '../components/Breadcrumb';
 import {AjaxLoader} from "../components/ajax-loader";
+import {EXERCISE_RUNNING_STATUS} from "../models/exercise";
 
 class MainLayout extends Component {
+    getMainClassMode(){
+        let { exerciseStatus } = this.props;
+
+        if(exerciseStatus == EXERCISE_RUNNING_STATUS){
+            return 'full-screen';
+        }
+        return '';
+    }
     render() {
         let { currentUser } = this.props;
         return (
-            <div className="app">
+            <div className={`app ${this.getMainClassMode()}`}>
                 <AjaxLoader show={this.props.loading} size={150} color="white"/>
                 <Header currentUser={currentUser}/>
                 <div className="app-body">
