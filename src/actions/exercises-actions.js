@@ -89,7 +89,19 @@ export const startExerciseRecordingJob = (exercise) => (dispatch, getState) => {
     });
 }
 
-export const addExerciseSecond = () => (dispatch) => {
+export const addExerciseSecond = () => (dispatch, getState) => {
+
+    let {exercisePlayerState} = getState();
+    let {timer, currentExercise} = exercisePlayerState;
+
+    if(timer >= currentExercise.max_duration){
+        dispatch({
+            type: SET_EXERCISE_STATUS,
+            payload: 'EXERCISE_TIMEOUT_STATUS'
+        });
+        return;
+    }
+
     dispatch({
         type: EXERCISE_STARTED_ADD_SECOND,
         payload: {}

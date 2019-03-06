@@ -13,7 +13,7 @@ import {
     STREAM_STATUS_OK, STREAM_STATUS_ERROR, STREAM_STATUS_LOADED, STREAM_STATUS_LOADING,
     STREAM_STATUS_INITIAL
 } from '../models/stream';
-import {EXERCISE_INITIAL_STATUS, EXERCISE_RUNNING_STATUS, EXERCISE_STARTING_STATUS} from "../models/exercise";
+import {EXERCISE_INITIAL_STATUS, EXERCISE_RUNNING_STATUS, EXERCISE_STARTING_STATUS, EXERCISE_TIMEOUT_STATUS} from "../models/exercise";
 import {
     getExerciseById, startExerciseRecordingJob, stopExerciseRecordingJob, addExerciseSecond, setExerciseStatus,
     setStreamStatus, checkBackgroundProcessStreaming, checkBackgroundProcessCapture,
@@ -223,9 +223,19 @@ class ExercisePlayer extends Component {
         })
     }
 
+    componentDidUpdate(prevProps, prevState){
+        if (this.props.exerciseStatus !== prevProps.exerciseStatus) {
+            if(this.props.exerciseStatus == EXERCISE_TIMEOUT_STATUS){
+                // timeout, abort it
+                this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
+                    () =>  this.props.history.push("/auth/exercises")
+                );
+            }
+        }
+    }
+
     render() {
         let {
-            timer,
             currentExercise,
             exerciseStatus,
             streamStatus,
@@ -235,20 +245,12 @@ class ExercisePlayer extends Component {
 
         if(currentExercise == null) return null;
 
-        if(timer >= currentExercise.max_duration){
+        if(exerciseStatus == EXERCISE_TIMEOUT_STATUS){
             swal({
                 title: T.translate('Exercise Max. Length reached!'),
                 text: T.translate('Exercise will be aborted because you reached the max. allowed length'),
                 type: 'error'
             });
-
-            let {interval, backgroundInterval} = this.state;
-            window.clearInterval(interval);
-            window.clearInterval(backgroundInterval);
-
-            this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
-                () =>  this.props.history.push("/auth/exercises")
-            );
             return null;
         }
 
