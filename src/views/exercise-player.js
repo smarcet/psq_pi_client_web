@@ -51,6 +51,7 @@ class ExercisePlayer extends Component {
         this.onDismissShareExercise = this.onDismissShareExercise.bind(this);
         this.abortExercise = this.abortExercise.bind(this);
         this.runBackgroundJobs = this.runBackgroundJobs.bind(this);
+        this.stopIntervals = this.stopIntervals.bind(this);
     }
 
     onDismissShareExercise() {
@@ -121,6 +122,12 @@ class ExercisePlayer extends Component {
         });
     }
 
+    stopIntervals(){
+        let {interval, backgroundInterval} = this.state;
+        window.clearInterval(interval);
+        window.clearInterval(backgroundInterval);
+    }
+
     stopExercise() {
         swal({
             title: T.translate('Are you sure?'),
@@ -133,9 +140,7 @@ class ExercisePlayer extends Component {
             if (result.value) {
                 // call to local api to stop recording it and upload file
 
-                let {interval, backgroundInterval} = this.state;
-                window.clearInterval(interval);
-                window.clearInterval(backgroundInterval);
+                this.stopIntervals();
 
                 this.props.stopExerciseRecordingJob(this.props.currentExercise, this.props.currentRecordingJob).then(() => {
                     swal({
@@ -211,10 +216,7 @@ class ExercisePlayer extends Component {
             if (result.value) {
                 // call to local api to stop recording it and upload file
 
-
-                let {interval, backgroundInterval} = this.state;
-                window.clearInterval(interval);
-                window.clearInterval(backgroundInterval);
+                this.stopIntervals();
 
                 this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
                     () =>  this.props.history.push("/auth/exercises")
@@ -227,6 +229,8 @@ class ExercisePlayer extends Component {
         if (this.props.exerciseStatus !== prevProps.exerciseStatus) {
             if(this.props.exerciseStatus == EXERCISE_TIMEOUT_STATUS){
                 // timeout, abort it
+                this.stopIntervals();
+
                 this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
                     () =>  this.props.history.push("/auth/exercises")
                 );
@@ -247,8 +251,8 @@ class ExercisePlayer extends Component {
 
         if(exerciseStatus == EXERCISE_TIMEOUT_STATUS){
             swal({
-                title: T.translate('Exercise Max. Length reached!'),
-                text: T.translate('Exercise will be aborted because you reached the max. allowed length'),
+                title: T.translate('Exercise Maximum Length reached!'),
+                text: T.translate('Exercise will be aborted because you reached the maximum allowed length'),
                 type: 'error'
             });
             return null;
@@ -267,9 +271,7 @@ class ExercisePlayer extends Component {
                 if (!result.value) {
                     // abort exercise
 
-                    let {interval, backgroundInterval} = this.state;
-                    window.clearInterval(interval);
-                    window.clearInterval(backgroundInterval);
+                    this.stopIntervals();
 
                     this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
                         () =>  this.props.history.push("/auth/exercises")
@@ -288,9 +290,7 @@ class ExercisePlayer extends Component {
                 type: 'error'
             });
 
-            let {interval, backgroundInterval} = this.state;
-            window.clearInterval(interval);
-            window.clearInterval(backgroundInterval);
+            this.stopIntervals();
 
             this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
                 () =>  this.props.history.push("/auth/exercises")
