@@ -37,9 +37,7 @@ class ExercisePlayer extends Component {
             backgroundInterval: 0,
             visibleShareUrlAlert : false,
         }
-        this.displayingStreamingError = false;
-        this.ignoreStreamError = false;
-        this.displayingCaptureError = false;
+
         this.runTimer = this.runTimer.bind(this);
         this.startExercise = this.startExercise.bind(this);
         this.stopExercise = this.stopExercise.bind(this);
@@ -236,6 +234,45 @@ class ExercisePlayer extends Component {
                 );
             }
         }
+
+        if (this.props.backgroundProcessStreamingStatus !== prevProps.backgroundProcessStreamingStatus) {
+            if(this.props.backgroundProcessStreamingStatus == BACKGROUND_PROCESS_STREAMING_ERROR_STATE){
+                swal({
+                    title: T.translate('Streaming process error'),
+                    text: T.translate('Do you want to continue exercise? streaming process is down right now'),
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: T.translate('Yes, continue'),
+                    cancelButtonText: T.translate('No, stop it')
+                }).then((result) => {
+                    if (!result.value) {
+                        // abort exercise
+                        this.stopIntervals();
+                        this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
+                            () =>  this.props.history.push("/auth/exercises")
+                        );
+                        return;
+                    }
+                })
+            }
+        }
+        if (this.props.backgroundProcessCaptureStatus !== prevProps.backgroundProcessCaptureStatus) {
+            if(this.props.backgroundProcessCaptureStatus == BACKGROUND_PROCESS_CAPTURE_ERROR_STATE){
+
+                swal({
+                    title: T.translate('Video capture process error'),
+                    text: T.translate('Video capture process is erroring right now, canceling exercise, try again later'),
+                    type: 'error'
+                });
+
+                this.stopIntervals();
+
+                this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
+                    () =>  this.props.history.push("/auth/exercises")
+                );
+
+            }
+        }
     }
 
     render() {
@@ -243,7 +280,6 @@ class ExercisePlayer extends Component {
             currentExercise,
             exerciseStatus,
             streamStatus,
-            backgroundProcessStreamingStatus,
             backgroundProcessCaptureStatus
         } = this.props;
 
@@ -258,45 +294,10 @@ class ExercisePlayer extends Component {
             return null;
         }
 
-        if(backgroundProcessStreamingStatus == BACKGROUND_PROCESS_STREAMING_ERROR_STATE && ! this.displayingStreamingError && !this.ignoreStreamError){
-            this.displayingStreamingError = true;
-            swal({
-                title: T.translate('Streaming process error'),
-                text: T.translate('Do you want to continue exercise? streaming process is down right now.'),
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: T.translate('Yes, continue.'),
-                cancelButtonText: T.translate('No, stop it.')
-            }).then((result) => {
-                if (!result.value) {
-                    // abort exercise
-
-                    this.stopIntervals();
-
-                    this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
-                        () =>  this.props.history.push("/auth/exercises")
-                    );
-                    return;
-                }
-                this.ignoreStreamError = true;
-            })
-        }
-
-        if(backgroundProcessCaptureStatus == BACKGROUND_PROCESS_CAPTURE_ERROR_STATE && !this.displayingCaptureError){
-            this.displayingCaptureError = true;
-            swal({
-                title: T.translate('Video capture process error'),
-                text: T.translate('Video capture process is erroring right now, canceling exercise, try again later'),
-                type: 'error'
-            });
-
-            this.stopIntervals();
-
-            this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
-                () =>  this.props.history.push("/auth/exercises")
-            );
+        if(backgroundProcessCaptureStatus == BACKGROUND_PROCESS_CAPTURE_ERROR_STATE){
             return null;
         }
+
         if (currentExercise == null) return null;
         return (
             <div className="animated fadeIn">
