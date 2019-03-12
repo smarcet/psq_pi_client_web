@@ -7,7 +7,7 @@
     "build-dev": "./node_modules/.bin/webpack --config webpack.config.js",
     "build": "NODE_ENV=production ./node_modules/.bin/webpack --config webpack.config.js",
     "serve": "webpack-dev-server --open --https",
-    "serveraw": "webpack-dev-server --open"
+    "serveraw": "webpack-dev-server --open --port 8081"
   },
   "author": "smarcet@gmail.com",
   "license": "ISC",

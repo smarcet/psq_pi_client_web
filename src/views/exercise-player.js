@@ -140,7 +140,7 @@ class ExercisePlayer extends Component {
             type: 'warning',
             showCancelButton: true,
             confirmButtonText: T.translate('Yes, submit it!'),
-            cancelButtonText: T.translate('No, keep doing it')
+            cancelButtonText: T.translate('No, cancel it')
         }).then((result) => {
             if (result.value) {
                 // call to local api to stop recording it and upload file
@@ -157,8 +157,14 @@ class ExercisePlayer extends Component {
                     this.props.setExerciseStatus(EXERCISE_INITIAL_STATUS);
                     this.props.history.push("/auth/exercises");
                 });
-
+                return;
             }
+
+            this.stopIntervals();
+
+            this.props.abortExercise(this.props.currentExercise, this.props.currentRecordingJob).then(
+                () =>  this.props.history.push("/auth/exercises")
+            );
         })
     }
 
@@ -316,17 +322,16 @@ class ExercisePlayer extends Component {
                         {   exerciseStatus != EXERCISE_RUNNING_STATUS &&
                             <h2>{T.translate("Exercise {exercise_name}", {exercise_name: currentExercise.title})}</h2>
                         }
+                        {exerciseStatus != EXERCISE_RUNNING_STATUS &&
                         <hr className="player-divider"></hr>
+                        }
+                        {   exerciseStatus != EXERCISE_RUNNING_STATUS &&
                         <Button color="warning" className="share-button"
                                 onClick={this.onClickShare}
                                 outline><i className="fa fa-share-alt"></i>&nbsp;{T.translate("Share It")}
                         </Button>
-                        { exerciseStatus == EXERCISE_RUNNING_STATUS &&
-                        <Button className="abort-button" color="danger" onClick={this.abortExercise} outline>
-                            <i className="fa fa-trash"></i>&nbsp;{T.translate("Abort It")}
-                        </Button>
                         }
-                        <Alert color="info" isOpen={this.state.visibleShareUrlAlert} toggle={this.onDismissShareExercise}>
+                        <Alert color="info" isOpen={this.state.visibleShareUrlAlert} className="alert-share" toggle={this.onDismissShareExercise}>
                             <p>
                                 {T.translate("Exam Share Stream URL")}
                             </p>
@@ -368,6 +373,10 @@ class ExercisePlayer extends Component {
                             }
                             {exerciseStatus == EXERCISE_RUNNING_STATUS &&
                             <div className="img-overlay2">
+                                <button className="btn btn-md btn-info btn-player btn-share"
+                                        onClick={this.onClickShare}>
+                                    <i className="fa fa-share-alt"></i>
+                                </button>
                                 <button className="btn btn-md btn-danger btn-player btn-recording"
                                         onClick={this.stopExercise}>
                                     <i className="fa fa-stop-circle"></i>
